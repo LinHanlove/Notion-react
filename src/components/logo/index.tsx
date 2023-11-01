@@ -2,7 +2,7 @@ import styled from "styled-components";
 const Logo_warp = styled.div`
   .path {
     stroke: var(--text-color);
-    stroke-width: 12;
+    stroke-width: 0.5rem;
     stroke-linecap: round;
     animation: move 3s linear infinite;
   }
@@ -27,13 +27,13 @@ const Logo_warp = styled.div`
 
 const Logo = () => {
   return (
-    <Logo_warp>
+    <Logo_warp className="w-[10vw]">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         version="1"
-        width="100"
-        height="60"
+        width="6vw"
+        height="4vh"
         viewBox="0 0 684 195.75"
       >
         <g>

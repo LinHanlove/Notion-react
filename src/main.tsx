@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import "animate.css";
 import "@/style/theme.css";
 import "@/style/index.css";
 import "@/style/tailwind.css";

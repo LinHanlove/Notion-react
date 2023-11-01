@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 
 import { Suspense, lazy } from "react";
 // 按需加载
-const Layout = lazy(() => import("@/view/Layout"));
+const Layout = lazy(() => import("@/Layout"));
 const Home = lazy(() => import("@/view/Home"));
 const NotFound = lazy(() => import("@/view/NotFound"));
 
