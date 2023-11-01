@@ -1,27 +1,66 @@
-# React + TypeScript + Vite
+# Notion [react]
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 网站示例
 
-Currently, two official plugins are available:
+[notions.top](https://notions.top/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 技术栈
 
-## Expanding the ESLint configuration
+前端技术：React + Redux + Vite + tailWindCss + typeScript + antd
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+后端技术：暂未写，后面打算用 php + thinkphp
 
-- Configure the top-level `parserOptions` property like this:
+## 网站简介
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
+这是一个 react + Redux + vite + tailWindCss + typeScript + antd 的产物。
+
+后续技术成熟会逐渐上线 app , 小程序 , 聊天平台 , 桌面端软件
+
+网站模块：
+
+- 博客系统：具有文章，留言，时间线，云音乐等功能。
+<!-- - 聊天室系统：具有朋友圈（时间线），好友，群等功能。 -->
+
+<!-- 本网站搭建于阿里云，采用前后端分离进行实现，两个前端项目通过 Nginx 代理。 -->
+
+### 2023 年 09 月 07 日开始搭建项目并部署
+
+## 安装 (推荐使用 pnpm)
+
+```
+npm install
+
+pnpm i
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## 启动
+
+```
+npm run serve
+
+pnpm dev
+```
+
+## 编译
+
+```
+npm run build
+
+pnpm build
+```
+
+### 重点事情说三遍
+
+`Star`
+
+`Star`
+
+`Star`
+
+一定要`Star`
+
+开源不易，欢迎赞助这个项目，让这个项目越来越好。
+
+## 欢迎关注作者 掘金
+
+[LinHan](https://juejin.cn/user/2670060580903288)

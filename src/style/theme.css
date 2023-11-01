@@ -1,0 +1,34 @@
+#root {
+  width: 100vw;
+  height: 100vh;
+}
+
+/* 主题切换 */
+:root {
+  --text-color: #333;
+
+  --background: #fff;
+}
+.dark {
+  --text-color: #fff;
+  --background: #272727;
+}
+
+/* dark mode switch transition */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) {
+  z-index: 9999 !important;
+}
+::view-transition-new(root) {
+  z-index: 1 !important;
+}
+.dark::view-transition-old(root) {
+  z-index: 1 !important;
+}
+.dark::view-transition-new(root) {
+  z-index: 9999 !important;
+}

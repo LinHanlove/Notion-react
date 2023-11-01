@@ -1,0 +1,107 @@
+:root {
+  margin: 0;
+  /* 字体 */
+
+  --SmileySans: SmileySans;
+  --a: linear-gradient(0deg, #ddd, #fff);
+  --headerAndFooterHeight: 60px;
+  --translucent: rgba(0, 0, 0, 0.5);
+  --textSize: 20px;
+  --c1: var(--background);
+  --c2: var(--background);
+  --c3: var(--background);
+  --c4: var(--background);
+  --c5: var(--background);
+  --musicWidth: 1000px;
+  --home-left: 300px;
+  --home-right: 300px;
+  --header-mt: 63px;
+  --commentContent: #f7f9fe;
+  --textBg: url(./assets/images/textBg);
+  --bannerWave1: url(./assets/images/bannerwave1.png) repeat-x;
+  --bannerWave2: url(./assets/images/bannerwave2.png) repeat-x;
+  --color-surface: 250 253 252;
+  --color-primary: 0 106 106;
+  --fontColor: white;
+  --borderColor: #4f4f4f;
+  --borderHoverColor: black;
+  --articleFontColor: #e4e4e4;
+  --articleGreyFontColor: #d4d4d4;
+  --commentContent: #d4d4d4;
+  --favoriteBg: #1e1e1e;
+  --gradualBackground: linear-gradient(
+    to right bottom,
+    #ee7752,
+    #e73c7e,
+    #23a6d5,
+    #23d5ab
+  );
+  --favoriteBg: #f7f9fe;
+  --fontColor: #000;
+  --borderColor: rgba(0, 0, 0, 0.5);
+  --borderHoverColor: hsla(0, 0%, 43.1%, 0.4);
+  --articleFontColor: #1f1f1f;
+  --articleGreyFontColor: #616161;
+  --commentContent: #f7f9fe;
+  --themeBackground: orange;
+  --gradualRed: linear-gradient(90deg, #ff4b2b, #ff416c);
+  --toolbarFont: #333;
+  --toolbarBackground: #fff;
+  --greyFont: #797979;
+  --maxGreyFont: #595a5a;
+  --gradientBG: linear-gradient(-90deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  --whiteMask: hsla(0, 0%, 100%, 0.3);
+  --maxWhiteMask: hsla(0, 0%, 100%, 0.5);
+  --maxMaxWhiteMask: hsla(0, 0%, 100%, 0.7);
+  --miniWhiteMask: hsla(0, 0%, 100%, 0.15);
+  --transparent: transparent;
+  --miniMask: rgba(0, 0, 0, 0.15);
+  --mask: rgba(0, 0, 0, 0.3);
+  --translucent: rgba(0, 0, 0, 0.5);
+  --maxMask: rgba(0, 0, 0, 0.7);
+  --white: #fff;
+  --red: red;
+  --lightRed: #ff4b2b;
+  --maxLightRed: #ff416c;
+  --orangeRed: #ef794f;
+  --azure: #ecf7fe;
+  --blue: #03a9f4;
+  --lightGray: #ddd;
+  --maxLightGray: #eee;
+  --maxMaxLightGray: hsla(0, 0%, 94.9%, 0.5);
+  --lightGreen: #39c5bb;
+  --green: #67c23a;
+  --black: #000;
+  --lightYellow: #f4e1c0;
+  --fontColor: black;
+  --borderColor: rgba(0, 0, 0, 0.5);
+  --borderHoverColor: rgba(110, 110, 110, 0.4);
+  --articleFontColor: #1f1f1f;
+  --articleGreyFontColor: #616161;
+  --commentContent: #f7f9fe;
+  --favoriteBg: #f7f9fe;
+
+  --mask: rgba(0, 0, 0, 0.3);
+  --translucent: rgba(0, 0, 0, 0.5);
+  --maxMask: rgba(0, 0, 0, 0.7);
+}
+
+::-webkit-scrollbar {
+  background-color: rgba(73, 177, 245, 0.2);
+  width: 8px;
+  height: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #49b1f5;
+  background-image: linear-gradient(
+    45deg,
+    hsla(0, 0%, 100%, 0.4) 25%,
+    transparent 0,
+    transparent 50%,
+    hsla(0, 0%, 100%, 0.4) 0,
+    hsla(0, 0%, 100%, 0.4) 75%,
+    transparent 0,
+    transparent
+  );
+  border-radius: 1em;
+}
