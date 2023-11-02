@@ -1,4 +1,4 @@
-import Logo from "@/components/logo";
+import Logo from "@/components/Logo";
 import { route } from "@/router";
 import { Menu, MenuProps } from "antd";
 import { Icon } from "@iconify/react";

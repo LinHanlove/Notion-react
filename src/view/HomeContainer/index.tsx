@@ -13,7 +13,7 @@ export default function HomeContainer() {
         {/* 左 */}
         <div className="h-auto md:w-[30%] w-full ">
           {/* 个人介绍 */}
-          <Card className="md:md:w-[80%]  w-[100%] h-[12vh] m-[0_auto] group overflow-hidden hover:h-[32vh] border-0 [&>.ant-card-body]:p-0 rounded-xl duration-500  ease-linear hover:shadow-[0_8px_10px_8px_var(--borderHoverColor)]">
+          <Card className="md:md:w-[80%] bg-[--background] text-[--text-color]  w-[100%] h-[12vh] m-[0_auto] group overflow-hidden hover:h-[36vh] border-0  [&>.ant-card-body]:w-full [&>.ant-card-body]:h-full [&>.ant-card-body]:p-2  rounded-xl duration-500  ease-linear shadow-[0_8px_10px_8px_var(--borderHoverColor)]">
             <div className="w-full h-[12vh] relative flex items-center">
               <div className="absolute top-1/2 -translate-y-1/2 right-1/2 group-hover:translate-x-[50%] duration-500  ease-linear ">
                 <Avatar className="w-[8vh] h-[8vh] animate-spin" src={url} />
@@ -23,7 +23,7 @@ export default function HomeContainer() {
               </div>
             </div>
 
-            <div className="md:md:w-[80%]  w-[90%] h-auto scale-0 group-hover:scale-[1] duration-500 ease-linear m-[0_auto] rounded-2xl px-2 flex justify-center items-center flex-col shadow-[8px_8px_10px_#ddd,-8px_-8px_10px_#ddd]">
+            <div className="md:md:w-[80%]  w-[90%] h-auto scale-0  group-hover:scale-[1] duration-500 ease-linear m-[0_auto] rounded-2xl px-2 flex justify-center items-center flex-col shadow-[4px_4px_10px_#ddd,-4px_-4px_10px_#ddd]">
               <div className="text-[2rem] font-bold my-2 text-center text-[var(--text-color)]">
                 Notion
               </div>
@@ -58,7 +58,7 @@ export default function HomeContainer() {
             </div>
           </Card>
           {/* 搜索 */}
-          <Card className="md:md:w-[80%]  w-[100%] m-[0_auto] border-0 bg-[var(--background)]  shadow-[0_5px_10px_5px_var(--borderHoverColor)] mt-8">
+          <Card className="md:md:w-[80%]  w-[100%] m-[0_auto] border-0  [&>.ant-card-body]:w-full [&>.ant-card-body]:h-full [&>.ant-card-body]:p-2  bg-[var(--background)]  shadow-[0_5px_10px_5px_var(--borderHoverColor)] mt-8">
             <div className="w-full text-[1.4rem] text-[var(--lightGreen)] font-bold">
               搜索
             </div>
@@ -76,7 +76,7 @@ export default function HomeContainer() {
             </div>
           </Card>
           {/* 推荐文章 */}
-          <Card className="md:w-[80%] w-[100%] m-[0_auto] border-0 bg-[var(--background)]  shadow-[0_5px_10px_5px_var(--borderHoverColor)] mt-8">
+          <Card className="md:w-[80%] w-[100%] m-[0_auto]  [&>.ant-card-body]:w-full [&>.ant-card-body]:h-full [&>.ant-card-body]:p-2  border-0 bg-[var(--background)]  shadow-[0_5px_10px_5px_var(--borderHoverColor)] mt-8">
             <div className="w-full text-[1.4rem] text-[var(--lightGreen)] font-bold flex items-center ">
               <Icon
                 icon="ion:book-outline"
@@ -90,7 +90,7 @@ export default function HomeContainer() {
                   <div className="w-full  h-[10vh] my-2" key={inx}>
                     <div className="w-full h-[8vh] flex ">
                       <div className="w-2/5 rounded-lg h-full overflow-hidden">
-                        <Image src={url} />
+                        <Image src={url} className="w-full h-full" />
                       </div>
                       <div className="w-3/5 rounded-lg h-full truncate text-[1rem] font-extrabold ml-2 text-[var(--text-color)]">
                         {inx == 1
@@ -108,50 +108,52 @@ export default function HomeContainer() {
             </div>
           </Card>
           {/* 赞赏名单 */}
-          <Card className="md:w-[80%] w-[100%] m-[0_auto]  h-[40vh] border-0    shadow-[0_5px_10px_5px_var(--borderHoverColor)] mt-8">
-            <div className="w-full h-6 text-[1.4rem] text-[var(--lightGreen)] font-bold flex items-center ">
-              <Icon icon="fa6-solid:cat" className="mr-4 text-center" />
-              赞赏名单
-            </div>
-            <div
-              ref={container}
-              className="admireList mt-4 h-[26vh] overflow-hidden scroll-behavior-[smooth]"
-            >
-              {useScrollable(
-                container.current,
-                Array(100)
-                  .fill("")
-                  .map((i, inx) => i + inx)
-              ).map((i: any, inx: number | null) => {
-                return (
-                  <div
-                    className="w-full  h-10 my-2 flex justify-between items-center"
-                    key={i}
-                  >
-                    <div className="flex items-center truncate">
-                      <div className="w-8 h-8 rounded-full  overflow-hidden">
-                        <Image src={url} />
-                      </div>
-                      <div className="text-[0.8rem] font-bold ml-2 text-[var(--text-color)]">
-                        linhan
-                      </div>
-                    </div>
-                    <div className="text-[0.8rem] text-teal-400 font-bold">
-                      {inx}元
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            <div className="h-[1.8rem] mt-4 flex justify-center items-center">
-              <Button
-                type="primary"
-                className="h-full md:w-[80%] w-[100%] flex justify-center items-center text-[var(--text-color)] font-bold"
-                shape="round"
-                size="large"
+          <Card className="md:w-[80%] w-[100%] m-[0_auto] bg-[--background]  h-[40vh] border-0   [&>.ant-card-body]:w-full [&>.ant-card-body]:h-full [&>.ant-card-body]:p-2  shadow-[0_5px_10px_5px_var(--borderHoverColor)] mt-8">
+            <div className="h-full">
+              <div className="w-full h-[10%] text-[1.4rem]  text-[var(--lightGreen)] font-bold flex items-center ">
+                <Icon icon="fa6-solid:cat" className="mr-4 text-center" />
+                赞赏名单
+              </div>
+              <div
+                ref={container}
+                className=" mt-2 h-[70%]  overflow-hidden scroll-behavior-[smooth]"
               >
-                <div>🎉 赞赏 🎉</div>
-              </Button>
+                {useScrollable(
+                  container.current,
+                  Array(100)
+                    .fill("")
+                    .map((i, inx) => i + inx)
+                ).map((i: any, inx: number | null) => {
+                  return (
+                    <div
+                      className="w-full  h-10 my-2 flex justify-between items-center"
+                      key={i}
+                    >
+                      <div className="flex items-center truncate">
+                        <div className="w-8 h-8 rounded-full  overflow-hidden">
+                          <Image src={url} />
+                        </div>
+                        <div className="text-sm font-bold ml-2 text-[var(--text-color)]">
+                          linhan
+                        </div>
+                      </div>
+                      <div className="text-sm text-teal-400 font-bold">
+                        {inx}元
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="h-[12%] mt-2 flex justify-center items-center">
+                <Button
+                  type="primary"
+                  className="h-full md:w-[80%] w-[100%] flex justify-center items-center text-[var(--text-color)] font-bold"
+                  shape="round"
+                  size="large"
+                >
+                  <div>🎉 赞赏 🎉</div>
+                </Button>
+              </div>
             </div>
           </Card>
         </div>
@@ -175,7 +177,7 @@ export default function HomeContainer() {
           {/* 发现 */}
           <div className="h-10 md:w-[80%] w-[100%] m-[0_auto] border-dashed border-b  border-[var(--lightGray)] flex items-center">
             <Icon icon="fluent-emoji-flat:leaf-fluttering-in-wind" />
-            <div className="text-[0.8rem] text-[var(--text-color)] font-bold ml-2">
+            <div className="text-sm text-[var(--text-color)] font-bold ml-2">
               发现
             </div>
           </div>
@@ -184,24 +186,18 @@ export default function HomeContainer() {
             {moduleList.map((i, inx) => {
               return inx % 2 == 0 ? (
                 <Card
-                  bodyStyle={{
-                    width: "100% ",
-                    display: "flex",
-                    padding: 0,
-                    overflow: "hidden",
-                  }}
                   key={inx}
-                  className="h-[30vh] md:h-[24vh] md:w-[80%] w-[100%] m-[0_auto] flex  rounded-[0.4rem] border-0 bg-[var(--background)]  shadow-[0_5px_10px_5px_var(--borderHoverColor)] mt-8"
+                  className="h-[30vh] [&>.ant-card-body]:overflow-hidden  [&>.ant-card-body]:w-full [&>.ant-card-body]:flex [&>.ant-card-body]:h-full [&>.ant-card-body]:p-0  md:h-[24vh] md:w-[80%] w-[100%] m-[0_auto] flex  rounded-lg border-0 bg-[var(--background)]  shadow-[0_5px_10px_5px_var(--borderHoverColor)] mt-8"
                 >
                   <div className="w-1/2 p-5">
-                    <div className="text-[0.8rem] font-bold text-[var(--text-color)] flex items-center">
+                    <div className="text-sm font-bold text-[var(--text-color)] flex items-center">
                       <Icon icon="clarity:date-line" />
                       <div className="ml-2">发布于：{i.time}</div>
                     </div>
-                    <div className="my-2 text-[1.6rem] font-bold text-[var(--text-color)]">
+                    <div className="my-2 text-2xl font-bold text-[var(--text-color)]">
                       {i.title}
                     </div>
-                    <div className="text-[0.8rem] font-bold text-[var(--text-color)] flex items-center">
+                    <div className="text-sm font-bold text-[var(--text-color)] flex items-center">
                       <div className="flex items-center">
                         <Icon icon="mdi:hot" className="text-[red] mr-1" />
                         <div>{i.hot}</div>
@@ -215,18 +211,18 @@ export default function HomeContainer() {
                         <div>{i.like}</div>
                       </div>
                     </div>
-                    <div className="text-[0.9rem] font-bold text-[var(--text-color)] truncate mt-2">
+                    <div className="text-sm font-bold text-[var(--text-color)] truncate mt-2">
                       {i.info}
                     </div>
-                    <div className="text-[0.9rem] font-bold  mt-2 flex  items-center">
-                      <div className="flex items-center  rounded-[0.4rem] text-[var(--lightGreen)] border-dashed border  border-[var(--lightGray)] px-1">
+                    <div className="text-sm font-bold  mt-2 flex  items-center">
+                      <div className="flex items-center  rounded-lg text-[var(--lightGreen)] border-dashed border  border-[var(--lightGray)] px-1">
                         <Icon
                           icon="solar:bookmark-opened-outline"
                           className="text-[orange] mr-[8px]"
                         />
                         {i.plate}
                       </div>
-                      <div className="flex items-center ml-6 rounded-[0.4rem] text-[var(--lightGreen)] border-dashed border  border-[var(--lightGray)] px-1">
+                      <div className="flex items-center ml-6 rounded-lg text-[var(--lightGreen)] border-dashed border  border-[var(--lightGray)] px-1">
                         <Icon
                           icon="game-icons:feather"
                           className="text-[var(--lightGreen)]  mr-2"
@@ -235,7 +231,7 @@ export default function HomeContainer() {
                       </div>
                     </div>
                   </div>
-                  <div className="w-1/2 h-full overflow-hidden rounded-[0.4rem]">
+                  <div className="w-1/2 h-full overflow-hidden rounded-lg">
                     <img
                       src={i.img}
                       alt=""
@@ -245,16 +241,10 @@ export default function HomeContainer() {
                 </Card>
               ) : (
                 <Card
-                  bodyStyle={{
-                    width: "100% ",
-                    display: "flex",
-                    padding: 0,
-                    overflow: "hidden",
-                  }}
                   key={inx}
-                  className="h-[30vh] md:h-[24vh] md:w-[80%] w-[100%] m-[0_auto] flex  border-0 bg-[var(--background)]  shadow-[0_5px_10px_5px_var(--borderHoverColor)] mt-8"
+                  className="h-[30vh] md:h-[24vh] md:w-[80%] [&>.ant-card-body]:overflow-hidden  [&>.ant-card-body]:w-full [&>.ant-card-body]:flex [&>.ant-card-body]:h-full [&>.ant-card-body]:p-0 w-[100%] m-[0_auto] flex  border-0 bg-[var(--background)]  shadow-[0_5px_10px_5px_var(--borderHoverColor)] mt-8"
                 >
-                  <div className="w-1/2 h-full overflow-hidden rounded-[0.4rem]">
+                  <div className="w-1/2 h-full overflow-hidden rounded-lg">
                     <img
                       src={i.img}
                       alt=""
@@ -262,14 +252,14 @@ export default function HomeContainer() {
                     />
                   </div>
                   <div className="w-1/2 p-5">
-                    <div className="text-[0.8rem] font-bold text-[var(--text-color)] flex items-center">
+                    <div className="text-sm font-bold text-[var(--text-color)] flex items-center">
                       <Icon icon="clarity:date-line" />
                       <div className="ml-2">发布于：{i.time}</div>
                     </div>
-                    <div className="my-2 text-[1.6rem] font-bold text-[var(--text-color)]">
+                    <div className="my-2 text-2xl font-bold text-[var(--text-color)]">
                       {i.title}
                     </div>
-                    <div className="text-[0.8rem] font-bold text-[var(--text-color)] flex items-center">
+                    <div className="text-sm font-bold text-[var(--text-color)] flex items-center">
                       <div className="flex items-center">
                         <Icon icon="mdi:hot" className="text-[red] mr-1" />
                         <div>{i.hot}</div>
@@ -283,18 +273,18 @@ export default function HomeContainer() {
                         <div>{i.like}</div>
                       </div>
                     </div>
-                    <div className="text-[0.9rem] font-bold text-[var(--text-color)] truncate mt-2">
+                    <div className="text-sm font-bold text-[var(--text-color)] truncate mt-2">
                       {i.info}
                     </div>
-                    <div className="text-[0.9rem] font-bold  mt-2 flex  items-center">
-                      <div className="flex items-center  rounded-[0.4rem] text-[var(--lightGreen)] border-dashed border  border-[var(--lightGray)] px-1">
+                    <div className="text-sm font-bold  mt-2 flex  items-center">
+                      <div className="flex items-center  rounded-lg text-[var(--lightGreen)] border-dashed border  border-[var(--lightGray)] px-1">
                         <Icon
                           icon="solar:bookmark-opened-outline"
                           className="text-[orange] mr-[8px]"
                         />
                         {i.plate}
                       </div>
-                      <div className="flex items-center ml-6 rounded-[0.4rem] text-[var(--lightGreen)] border-dashed border  border-[var(--lightGray)] px-1">
+                      <div className="flex items-center ml-6 rounded-lg text-[var(--lightGreen)] border-dashed border  border-[var(--lightGray)] px-1">
                         <Icon
                           icon="game-icons:feather"
                           className="text-[var(--lightGreen)]  mr-2"

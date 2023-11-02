@@ -2,8 +2,10 @@ import { useEffect, useRef } from "react";
 import bodymovin from "bodymovin";
 import animation from "./animation.json";
 import { Button } from "antd";
+import { useNavigate } from "react-router-dom";
 
 export default function NotFound() {
+  const navigate = useNavigate();
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -24,7 +26,13 @@ export default function NotFound() {
       <div className=""></div>
       <div ref={containerRef} className="w-full h-full  z-1"></div>
 
-      <Button type="primary" className=" absolute bottom-40 z-10">
+      <Button
+        onClick={() => {
+          navigate("/home");
+        }}
+        type="primary"
+        className=" absolute bottom-40 z-10"
+      >
         GO HOME
       </Button>
     </div>

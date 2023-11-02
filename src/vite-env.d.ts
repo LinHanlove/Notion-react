@@ -2,3 +2,4 @@
 declare module "bodymovin";
 declare module "react-transition-group";
 declare module "react-typewriter-hook";
+declare module "react-redux";
