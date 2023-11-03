@@ -4,6 +4,8 @@ import "animate.css";
 import "@/style/theme.css";
 import "@/style/index.css";
 import "@/style/tailwind.css";
+import "@/style/markdown.css";
+import "@/style/utils.css";
 import "normalize.css";
 // 导入store
 import { Provider } from "react-redux";

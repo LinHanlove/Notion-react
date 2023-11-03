@@ -11,7 +11,7 @@ export default defineConfig({
     alias: {
       "@": resolve(__dirname, "./src"),
     },
-    extensions: [".js", ".json", ".ts", ".tsx"], // 使用路径别名时想要省略的后缀名，可以自己 增减
+    extensions: [".js", ".json", ".ts", ".tsx", ".jsx"], // 使用路径别名时想要省略的后缀名，可以自己 增减
   },
   build: {
     /*指定构建输出的目录 */

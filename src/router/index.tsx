@@ -9,6 +9,7 @@ const Notebook = lazy(() => import("@/view/Notebook"));
 const NotFound = lazy(() => import("@/view/NotFound"));
 const TakeNotes = lazy(() => import("@/view/TakeNotes"));
 const PreviewNotes = lazy(() => import("@/view/PreviewNotes"));
+const TreeHole = lazy(() => import("@/view/TreeHole"));
 
 export const route = createBrowserRouter([
   {
@@ -41,18 +42,18 @@ export const route = createBrowserRouter([
         path: "tree-hole",
         element: (
           <Suspense fallback={"加载中..."}>
-            <Home />
+            <TreeHole />
           </Suspense>
         ),
       },
-      {
-        path: "cloud-music",
-        element: (
-          <Suspense fallback={"加载中..."}>
-            <Home />
-          </Suspense>
-        ),
-      },
+      // {
+      //   path: "cloud-music",
+      //   element: (
+      //     <Suspense fallback={"加载中..."}>
+      //       <Home />
+      //     </Suspense>
+      //   ),
+      // },
     ],
   },
 

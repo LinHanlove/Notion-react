@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MdEditor, ToolbarNames } from "md-editor-rt";
+import { MdEditor } from "md-editor-rt";
 import "md-editor-rt/lib/style.css";
 import { Button, Input, message } from "antd";
 import { Icon } from "@iconify/react";
@@ -39,12 +39,7 @@ export default () => {
     }
   };
 
-  interface IData {
-    toobars: ToolbarNames[];
-    toolbarsExclude: ToolbarNames[];
-  }
-
-  const [data] = useState<IData>({
+  const [data] = useState({
     toobars: [
       "bold",
       "underline",
@@ -75,15 +70,15 @@ export default () => {
   });
   return (
     <div className="w-[100vw] h-[100vh] bg-[#fff] ">
-      <div className="w-full h-[8vh] flex justify-between items-center">
+      <div className="w-full h-[8vh] flex justify-between items-center md:flex-nowrap flex-wrap   ">
         <Input
           placeholder="输入文章标题..."
-          className="w-4/5 ml-8 border-0 text-xl font-bold focus:border-0 focus:shadow-none placeholder:text-lg "
+          className="md:w-4/5 w-full  md:ml-8 border-0 text-xl font-bold focus:border-0 focus:shadow-none placeholder:text-lg "
         />
-        <div className="w-1/5 h-full pr-5 flex justify-end items-center">
+        <div className="md:w-1/5 w-full md:h-full h-6 pr-5 flex justify-end items-center">
           <Button
             type="primary"
-            className="w-40 h-10 flex justify-center items-center text-[var(--text-color)] font-bold"
+            className="w-40 md:h-10 h-6 flex justify-center items-center text-[var(--text-color)] font-bold"
             shape="round"
             size="large"
             onClick={() => handleRelease(save)}
@@ -96,9 +91,9 @@ export default () => {
           </Button>
         </div>
       </div>
-      <div className="h-[92vh]">
+      <div className="h-[92vh] ">
         <MdEditor
-          className="h-full"
+          className="h-full "
           defToolbars={[<MdThemeStyle onData={handleChildData} />]}
           modelValue={text}
           onChange={setText}

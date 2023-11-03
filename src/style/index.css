@@ -1,7 +1,5 @@
 :root {
   margin: 0;
-  /* 字体 */
-
   --SmileySans: SmileySans;
   --hang1: linear-gradient(0deg, #ddd, #fff);
   --hang2: linear-gradient(0deg, #fff, #ddd);
@@ -16,7 +14,7 @@
   --musicWidth: 1000px;
   --home-left: 300px;
   --home-right: 300px;
-  --header-mt: 63px;
+  --header: 8vh;
   --commentContent: #f7f9fe;
   --textBg: url(./assets/images/textBg);
   --homeBg: url(./assets/images/homeBg.jpg);

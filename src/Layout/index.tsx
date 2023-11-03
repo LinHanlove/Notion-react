@@ -1,14 +1,27 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Header from "@/Layout/Header";
 import { Outlet } from "react-router-dom";
 import { useTheme } from "@/hooks/useTheme";
 import { useEffect, useRef, useState } from "react";
 import { getTheme } from "@/utils";
 import { Icon } from "@iconify/react";
+import ThemeSwitch from "@/components/ThemeSwitch";
+import { useSelector } from "react-redux";
 
 export default function Layout() {
   // 主题变量
   const localStorageTheme = getTheme();
+  const themeSwitch_L = localStorage.getItem("themeSwitch");
 
+  const themeSwitch = useSelector(
+    (state: { themeSwitch: { themeSwitch: any } }) =>
+      state.themeSwitch.themeSwitch
+  );
+  useEffect(() => {
+    console.log(themeSwitch, themeSwitch_L, "222222");
+  }, []);
+
+  // 图标切换
   const [themeVisible, setThemeVisible] = useState(false);
 
   useEffect(() => {
@@ -101,6 +114,7 @@ export default function Layout() {
           icon="clarity:settings-line"
         />
       </div>
+      {themeSwitch ? <ThemeSwitch /> : ""}
     </div>
   );
 }

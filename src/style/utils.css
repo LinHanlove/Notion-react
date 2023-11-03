@@ -1,0 +1,9 @@
+/* 留言树洞 弹幕动画 */
+@keyframes rightToLeft {
+  0% {
+    transform: translate(100vw);
+  }
+  100% {
+    transform: translate(-100%);
+  }
+}

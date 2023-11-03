@@ -1,0 +1,5 @@
+.md-editor-toolbar-wrapper .md-editor-toolbar-left,
+.md-editor-toolbar-wrapper .md-editor-toolbar-right {
+  display: flex;
+  flex-wrap: wrap;
+}
