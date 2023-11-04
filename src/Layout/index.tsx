@@ -6,29 +6,32 @@ import { useEffect, useRef, useState } from "react";
 import { getTheme } from "@/utils";
 import { Icon } from "@iconify/react";
 import ThemeSwitch from "@/components/ThemeSwitch";
-import { useSelector } from "react-redux";
 
 export default function Layout() {
   // 主题变量
   const localStorageTheme = getTheme();
-  const themeSwitch_L = localStorage.getItem("themeSwitch");
-
-  const themeSwitch = useSelector(
-    (state: { themeSwitch: { themeSwitch: any } }) =>
-      state.themeSwitch.themeSwitch
-  );
-  useEffect(() => {
-    console.log(themeSwitch, themeSwitch_L, "222222");
-  }, []);
 
   // 图标切换
   const [themeVisible, setThemeVisible] = useState(false);
 
   useEffect(() => {
     setThemeVisible(localStorageTheme == "dark" ? true : false);
-  }, [localStorageTheme]);
 
+    setStatus(true);
+  }, [localStorageTheme]);
   const theme = useTheme();
+
+  const [status, setStatus] = useState(true);
+
+  // 监听日夜切换时的动画
+  document.addEventListener("animationend", function (event) {
+    const { animationName } = event;
+    if (animationName == "ocultar_sun" || animationName == "salida_sun") {
+      setTimeout(() => {
+        setStatus(false);
+      }, 1500);
+    }
+  });
 
   // 滚动元素
   const scrollDom = useRef<HTMLDivElement>(null);
@@ -70,6 +73,7 @@ export default function Layout() {
       className="scrollDom w-[100vw] h-[100vh]  overflow-x-hidden  overflow-y-auto scroll-behavior-[smooth]"
     >
       <Header ref={headerDom} />
+
       <div className="w-full h-full ">
         {/* 二级路由渲染出口 */}
         <Outlet />
@@ -114,7 +118,8 @@ export default function Layout() {
           icon="clarity:settings-line"
         />
       </div>
-      {themeSwitch ? <ThemeSwitch /> : ""}
+      {/* <ThemeSwitch /> */}
+      {status ? <ThemeSwitch /> : ""}
     </div>
   );
 }

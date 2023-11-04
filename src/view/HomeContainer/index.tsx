@@ -3,6 +3,8 @@ import { Icon } from "@iconify/react";
 import { useScrollable } from "@/hooks/useScrollable";
 import { useRef } from "react";
 import { moduleList } from "@/mock";
+import { motion } from "framer-motion";
+
 export default function HomeContainer() {
   const container = useRef<HTMLDivElement>(null);
   const url =
@@ -151,7 +153,15 @@ export default function HomeContainer() {
                   shape="round"
                   size="large"
                 >
-                  <div>🎉 赞赏 🎉</div>
+                  <motion.div
+                    className="box"
+                    whileHover={{ scale: 1.2 }}
+                    whileTap={{ scale: 0.9 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                  >
+                    {" "}
+                    <div>🎉 赞赏 🎉</div>
+                  </motion.div>
                 </Button>
               </div>
             </div>

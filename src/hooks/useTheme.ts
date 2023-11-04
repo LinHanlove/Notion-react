@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
 import { setTheme, getTheme } from "@/utils";
-import { setThemeSwitch } from "@/store/modules/themeSwitch";
-import { useDispatch } from "react-redux";
 
 /**
  * @body 全局主题切换
@@ -10,8 +8,6 @@ import { useDispatch } from "react-redux";
  */
 export const useTheme = () => {
   const [mode, setMode] = useState(""); // dark mode
-
-  const dispatch = useDispatch();
 
   const initTheme = () => {
     if (
@@ -45,9 +41,6 @@ export const useTheme = () => {
 
   return (event: { clientX: number; clientY: number }) => {
     const documentDom = document as any;
-
-    dispatch(setThemeSwitch(true));
-
     const isAppearanceTransition =
       documentDom.startViewTransition &&
       !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -85,5 +78,6 @@ export const useTheme = () => {
         }
       );
     });
+    localStorage.setItem("themeStatus", "true");
   };
 };

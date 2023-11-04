@@ -27,6 +27,7 @@
       "@/*": ["src/*"]
     }
   },
+  "exclude ": ["src/components/ThemeSwitch"],
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
