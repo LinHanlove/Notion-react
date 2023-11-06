@@ -1,31 +1,81 @@
 import Logo from "@/components/Logo";
-import { route } from "@/router";
-import { Menu, MenuProps } from "antd";
+import { Button, Menu, MenuProps, Popover, Space, notification } from "antd";
 import { Icon } from "@iconify/react";
 import { useEffect, useState, forwardRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import MenuRouter from "@/router/MenuRouter";
+import { getToken, removeToken } from "@/utils";
 
 const Header = forwardRef((props: { children?: any }, ref: any) => {
-  const { routes } = route;
   const navigate = useNavigate();
   const location = useLocation();
-  const title = ["首页", "笔记手账", "留言树洞", "云音乐"];
-  const iconList = ["mdi:github", "mdi:power", "fa6-solid:user-graduate"];
-  const menuList = routes[0].children?.map((i, inx) => {
+
+  const [logOutVisible, setLogOutVisible] = useState(false);
+
+  const IconGroup = [
+    {
+      icon: "mdi:github",
+      event: () => {
+        window.open("https://github.com/LinHanlove/Notion");
+      },
+    },
+    {
+      icon: getToken() ? "mdi:power" : "fa6-solid:user-graduate",
+      event: getToken()
+        ? () => {
+            setLogOutVisible(true);
+          }
+        : () => {
+            navigate("/user/login");
+          },
+    },
+    // {
+    //   icon: "fa6-solid:user-graduate",
+    //   event: () => {
+    //     navigate("/user/login");
+    //   },
+    // },
+  ];
+
+  const menuList = MenuRouter()?.map((i) => {
     return {
       key: i.path,
-      label: title[inx],
+      label: i.name,
     };
   }) as MenuProps["items"];
   const handelMenuClick = (val: { key: string }) => {
     const { key } = val;
     navigate(key);
   };
-
   const [selectedKey, setSelectedKey] = useState("");
   useEffect(() => {
     setSelectedKey(location.pathname.split("/")[1]);
   }, [location]);
+
+  const LogOut = () => {
+    removeToken();
+    window.location.reload();
+  };
+  const [api, contextHolder] = notification.useNotification();
+
+  const openNotification = () => {
+    setLogOutVisible(false);
+    const btn = (
+      <Space>
+        <Button type="link" size="small" onClick={() => api.destroy()}>
+          取消
+        </Button>
+        <Button type="primary" size="small" onClick={() => LogOut()}>
+          确认
+        </Button>
+      </Space>
+    );
+    api.open({
+      message: "请注意！",
+      description: "小主儿！确定要离开寒寒吗？",
+      btn,
+    });
+  };
 
   return (
     <header
@@ -44,17 +94,37 @@ const Header = forwardRef((props: { children?: any }, ref: any) => {
       ></Menu>
       {props.children ? props.children : ""}
       <div className="w-auto flex items-center">
-        {iconList.map((i) => (
+        {IconGroup.map((i) => (
           <div
-            key={i}
+            key={i.icon}
             className="w-6  h-6 mx-1 flex justify-center items-center rounded-full shadow-[0_10px_15px_var(--text-color)]  hover:shadow-[0_2px_5px_var(--background)] bg-[var(--hang1 )]"
           >
-            <div className="w-4 h-4 bg-[var(--hang2)] duration-500 rounded-full  flex justify-center items-center">
-              <Icon icon={i} className="w-4 h-4 text-[--text-color]" />
-            </div>
+            {i.icon == "mdi:power" ? (
+              <Popover
+                content={<a onClick={openNotification}>退出登录</a>}
+                title="info"
+                trigger="click"
+                open={logOutVisible}
+              >
+                <div
+                  onClick={i.event}
+                  className="w-4 h-4 bg-[var(--hang2)] duration-500 rounded-full  flex justify-center items-center"
+                >
+                  <Icon icon={i.icon} className="w-4 h-4 text-[--text-color]" />
+                </div>
+              </Popover>
+            ) : (
+              <div
+                onClick={i.event}
+                className="w-4 h-4 bg-[var(--hang2)] duration-500 rounded-full  flex justify-center items-center"
+              >
+                <Icon icon={i.icon} className="w-4 h-4 text-[--text-color]" />
+              </div>
+            )}
           </div>
         ))}
       </div>
+      {contextHolder}
     </header>
   );
 });
