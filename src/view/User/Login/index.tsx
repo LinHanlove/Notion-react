@@ -1,5 +1,8 @@
+import { getUserInfo } from "@/service";
+import { setToken } from "@/utils";
 import { Button, Form, Input } from "antd";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   type FieldType = {
@@ -7,9 +10,14 @@ const Login = () => {
     password?: string;
     remember?: string;
   };
+  const navigate = useNavigate();
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     console.log("login");
+    const userInfo = await getUserInfo();
+    console.log(userInfo, "----");
+    setToken("123456");
+    navigate("/home");
   };
 
   return (

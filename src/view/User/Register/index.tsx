@@ -1,5 +1,7 @@
+import { getVerifyCode } from "@/service";
 import { Button, Form, Input } from "antd";
 import { motion } from "framer-motion";
+import { useState } from "react";
 
 const Register = () => {
   type FieldType = {
@@ -9,8 +11,22 @@ const Register = () => {
     code: number;
   };
 
+  const [code, setCode] = useState("");
+
   const handleRegister = () => {
     console.log("register");
+  };
+
+  const getVerityCode = async () => {
+    try {
+      const result = await getVerifyCode();
+      console.log(result, "验证码");
+
+      const imageUrl = result.data.code;
+      setCode(imageUrl);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -63,6 +79,32 @@ const Register = () => {
         ]}
       >
         <Input placeholder="验证码" />
+      </Form.Item>
+      <Form.Item<FieldType>
+        name="code"
+        rules={[
+          {
+            required: true,
+            message: "Please input your Code!",
+          },
+        ]}
+      >
+        <div className="flex items-center w-full h-full">
+          <Button
+            className="w-1/2 h-full"
+            type="primary"
+            onClick={getVerityCode}
+          >
+            获取验证码
+          </Button>
+          {code !== "" ? (
+            <div className="w-1/2 h-full rounded-xl overflow-hidden bg-red-500">
+              <img alt="验证码" className="w-[100%] h-10" src={code} />
+            </div>
+          ) : (
+            ""
+          )}
+        </div>
       </Form.Item>
 
       {/* <Form.Item<FieldType> name="remember" valuePropName="checked">

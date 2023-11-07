@@ -1,4 +1,7 @@
 // 统一中转模块函数
-import { request } from "./request";
+import axios from "./request";
 
-export { request };
+export const getUserInfo = () => axios.get("/api/userinfo");
+
+/** 获取登录验证码 */
+export const getVerifyCode = () => axios.get("/api/verify/code");

@@ -1,4 +1,6 @@
+import { notification } from "antd";
 import axios from "axios";
+import { useState } from "react";
 
 /**
  * axios的封装处理步骤：
@@ -6,9 +8,20 @@ import axios from "axios";
  * 2. 超时时间
  * 3. 请求拦截器/响应拦截器
  */
+const baseURL = import.meta.env.VITE_APP_BASE_API;
+
+const Notification = (type = "error", msg = "") => {
+  notification.open({
+    message: "寒寒提醒你",
+    description: msg,
+    type: type == "error" ? "error" : "success",
+    placement: "bottomRight",
+    duration: 2.5,
+  });
+};
 
 const request = axios.create({
-  baseURL: "http://127.0.0.1:3000",
+  baseURL: baseURL,
   timeout: 5000,
 });
 
@@ -27,14 +40,20 @@ request.interceptors.request.use(
 // 添加响应拦截器
 request.interceptors.response.use(
   (response) => {
+    const code = response.data.code;
+
+    if (code == 200) {
+      console.log(response.data.msg);
+    }
     // 2xx 范围内的状态码都会触发该函数。
     // 对响应数据做点什么
-    return response;
+    console.log(response, "响应拦截器");
+
+    return response.data;
   },
   (error) => {
-    // 超出 2xx 范围的状态码都会触发该函数。
-    // 对响应错误做点什么
+    Notification("error", error);
     return Promise.reject(error);
   }
 );
-export { request };
+export default request;
