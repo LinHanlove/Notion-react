@@ -31,7 +31,7 @@ const Register = () => {
 
   return (
     <Form
-      className="md:w-[70%] w-[90%]  md:h-[50%] "
+      className="md:w-[70%] w-[90%] h-full md:h-[90%] "
       name="basic"
       initialValues={{ remember: true }}
       autoComplete="off"
@@ -91,7 +91,7 @@ const Register = () => {
       >
         <div className="flex items-center w-full h-full">
           <Button
-            className="w-1/2 h-full"
+            className="w-1/2 h-full text-sm"
             type="primary"
             onClick={getVerityCode}
           >

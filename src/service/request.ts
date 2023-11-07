@@ -1,6 +1,5 @@
 import { notification } from "antd";
 import axios from "axios";
-import { useState } from "react";
 
 /**
  * axios的封装处理步骤：
@@ -44,6 +43,9 @@ request.interceptors.response.use(
 
     if (code == 200) {
       console.log(response.data.msg);
+    }
+    if (code == 0) {
+      Notification("error", response.data.msg);
     }
     // 2xx 范围内的状态码都会触发该函数。
     // 对响应数据做点什么
