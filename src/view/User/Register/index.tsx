@@ -15,7 +15,7 @@ const Register = () => {
 
   return (
     <Form
-      className="md:w-[70%] w-[90%]  md:h-[50%] "
+      className="md:w-[70%] w-[90%] h-full md:h-[90%] "
       name="basic"
       initialValues={{ remember: true }}
       autoComplete="off"

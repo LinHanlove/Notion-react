@@ -28,7 +28,7 @@ export default function User() {
     <div className="w-full h-full flex justify-center items-center bg-[url(https://img.touxiangwu.com/zb_users/upload/2022/10/202210161665903661597939.jpg)] bg-cover bg-no-repeat">
       <motion.div
         layout
-        className="md:w-[46vw] w-[90vw]  md:h-[50vh] h-[40vh]  rounded-xl overflow-hidden "
+        className="md:w-[46vw] w-[90vw]  h-[50vh]  rounded-xl overflow-hidden "
       >
         <div className="w-full h-full backdrop-blur-3xl relative ">
           <motion.div

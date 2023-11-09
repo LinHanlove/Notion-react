@@ -44,6 +44,9 @@ request.interceptors.response.use(
     if (code == 200) {
       console.log(response.data.msg);
     }
+    if (code == 0) {
+      Notification("error", response.data.msg);
+    }
     // 2xx 范围内的状态码都会触发该函数。
     // 对响应数据做点什么
     console.log(response, "响应拦截器");
