@@ -1,5 +1,5 @@
 import Logo from "@/components/Logo";
-import { Button, Menu, MenuProps, Popover, Space, notification } from "antd";
+import { Button, Menu, MenuProps, Space, notification } from "antd";
 import { Icon } from "@iconify/react";
 import { useEffect, useState, forwardRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -10,31 +10,35 @@ const Header = forwardRef((props: { children?: any }, ref: any) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [logOutVisible, setLogOutVisible] = useState(false);
-
   const IconGroup = [
     {
+      hidden: true,
       icon: "mdi:github",
       event: () => {
         window.open("https://github.com/LinHanlove/Notion");
       },
     },
     {
-      icon: getToken() ? "mdi:power" : "fa6-solid:user-graduate",
-      event: getToken()
-        ? () => {
-            setLogOutVisible(true);
-          }
-        : () => {
-            navigate("/user/login");
-          },
+      hidden: getToken() ? true : false,
+      icon: "mdi:power",
+      event: () => {
+        openNotification();
+      },
     },
-    // {
-    //   icon: "fa6-solid:user-graduate",
-    //   event: () => {
-    //     navigate("/user/login");
-    //   },
-    // },
+    {
+      hidden: getToken() ? true : false,
+      icon: "fa6-solid:user-graduate",
+      event: () => {
+        // navigate("/user/login");
+      },
+    },
+    {
+      hidden: getToken() ? false : true,
+      icon: "icon-park-outline:geometric-flowers",
+      event: () => {
+        navigate("/user");
+      },
+    },
   ];
 
   const menuList = MenuRouter()?.map((i) => {
@@ -59,7 +63,6 @@ const Header = forwardRef((props: { children?: any }, ref: any) => {
   const [api, contextHolder] = notification.useNotification();
 
   const openNotification = () => {
-    setLogOutVisible(false);
     const btn = (
       <Space>
         <Button type="link" size="small" onClick={() => api.destroy()}>
@@ -71,8 +74,8 @@ const Header = forwardRef((props: { children?: any }, ref: any) => {
       </Space>
     );
     api.open({
-      message: "请注意！",
-      description: "小主儿！确定要离开寒寒吗？",
+      message: "小主儿🤔",
+      description: "确定要离开寒寒吗？",
       btn,
     });
   };
@@ -94,35 +97,23 @@ const Header = forwardRef((props: { children?: any }, ref: any) => {
       ></Menu>
       {props.children ? props.children : ""}
       <div className="w-auto flex items-center">
-        {IconGroup.map((i) => (
-          <div
-            key={i.icon}
-            className="w-6  h-6 mx-1 flex justify-center items-center rounded-full shadow-[0_10px_15px_var(--text-color)]  hover:shadow-[0_2px_5px_var(--background)] bg-[var(--hang1 )]"
-          >
-            {i.icon == "mdi:power" ? (
-              <Popover
-                content={<a onClick={openNotification}>退出登录</a>}
-                title="info"
-                trigger="click"
-                open={logOutVisible}
-              >
-                <div
-                  onClick={i.event}
-                  className="w-4 h-4 bg-[var(--hang2)] duration-500 rounded-full  flex justify-center items-center"
-                >
-                  <Icon icon={i.icon} className="w-4 h-4 text-[--text-color]" />
-                </div>
-              </Popover>
-            ) : (
+        {IconGroup.map((i) =>
+          i.hidden ? (
+            <div
+              key={i.icon}
+              className="w-6  h-6 mx-1 flex justify-center items-center rounded-full shadow-[0_10px_15px_var(--text-color)]  hover:shadow-[0_2px_5px_var(--background)] bg-[var(--hang1 )]"
+            >
               <div
                 onClick={i.event}
                 className="w-4 h-4 bg-[var(--hang2)] duration-500 rounded-full  flex justify-center items-center"
               >
                 <Icon icon={i.icon} className="w-4 h-4 text-[--text-color]" />
               </div>
-            )}
-          </div>
-        ))}
+            </div>
+          ) : (
+            ""
+          )
+        )}
       </div>
       {contextHolder}
     </header>

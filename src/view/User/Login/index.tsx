@@ -1,4 +1,3 @@
-import { getUserInfo } from "@/service";
 import { setToken } from "@/utils";
 import { Button, Form, Input } from "antd";
 import { motion } from "framer-motion";
@@ -14,8 +13,6 @@ const Login = () => {
 
   const handleLogin = async () => {
     console.log("login");
-    const userInfo = await getUserInfo();
-    console.log(userInfo, "----");
     setToken("123456");
     navigate("/home");
   };

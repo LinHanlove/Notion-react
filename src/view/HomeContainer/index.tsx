@@ -15,17 +15,14 @@ export default function HomeContainer() {
         {/* 左 */}
         <div className="h-auto md:w-[30%] w-full ">
           {/* 个人介绍 */}
-          <Card className="md:md:w-[80%] bg-[--background] text-[--text-color]  w-[100%] h-[12vh] m-[0_auto] group overflow-hidden hover:h-[36vh] border-0  [&>.ant-card-body]:w-full [&>.ant-card-body]:h-full [&>.ant-card-body]:p-2  rounded-xl duration-500  ease-linear shadow-[0_8px_10px_8px_var(--borderHoverColor)]">
-            <div className="w-full h-[12vh] relative flex items-center">
-              <div className="absolute top-1/2 -translate-y-1/2 right-1/2 group-hover:translate-x-[50%] duration-500  ease-linear ">
-                <Avatar className="w-[8vh] h-[8vh] animate-spin" src={url} />
-              </div>
-              <div className="absolute right-[4rem] text-[1.25rem] font-bold   group-hover:opacity-0 duration-500  ease-linear">
-                notion
+          <Card className="md:md:w-[80%] bg-[--background] text-[--text-color]  w-[100%] h-auto m-[0_auto] group overflow-hidden border-0  [&>.ant-card-body]:w-full [&>.ant-card-body]:h-full [&>.ant-card-body]:p-2  rounded-xl duration-500  ease-linear shadow-[0_8px_10px_8px_var(--borderHoverColor)]">
+            <div className="w-full h-[12vh] relative flex items-center justify-center">
+              <div className="">
+                <Avatar className="w-[10vh] h-[10vh] animate-spin" src={url} />
               </div>
             </div>
 
-            <div className="md:md:w-[80%]  w-[90%] h-auto scale-0  group-hover:scale-[1] duration-500 ease-linear m-[0_auto] rounded-2xl px-2 flex justify-center items-center flex-col shadow-[4px_4px_10px_#ddd,-4px_-4px_10px_#ddd]">
+            <div className="w-full h-auto m-[0_auto]  px-4 flex justify-center items-center flex-col ">
               <div className="text-[2rem] font-bold my-2 text-center text-[var(--text-color)]">
                 Notion
               </div>

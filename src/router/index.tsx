@@ -1,5 +1,6 @@
 import {
   IndexRouteObject,
+  Navigate,
   NonIndexRouteObject,
   createBrowserRouter,
 } from "react-router-dom";
@@ -28,7 +29,9 @@ export interface _NonIndexRouteObject extends NonIndexRouteObject {
   children?: _NonIndexRouteObject[];
   name?: string;
   mate?: {
-    hidden: boolean;
+    hidden?: boolean;
+    rule?: string;
+    backUrl?: string;
   };
 }
 
@@ -37,8 +40,9 @@ export type _RouteObject = _IndexRouterObject | _NonIndexRouteObject;
 /**
  * name 专属menu菜单路由
  * mate 其他权限标识符
- * hidden 控制该路由整体的显示隐藏
- *
+ *  hidden 控制该路由整体的显示隐藏
+ *  rule: "", 相应权限
+ *  backUrl: "", 不足权限跳转的页面路径
  */
 
 export const routes: _RouteObject[] = [
@@ -51,6 +55,7 @@ export const routes: _RouteObject[] = [
     ),
 
     children: [
+      { path: "", element: <Navigate to={"news"} /> },
       {
         path: "home",
         name: "首页",
@@ -104,6 +109,10 @@ export const routes: _RouteObject[] = [
 
   {
     path: "/take-notes",
+    mate: {
+      rule: "login",
+      backUrl: "/user",
+    },
     element: (
       <Suspense fallback={"加载中..."}>
         <TakeNotes />
@@ -112,6 +121,10 @@ export const routes: _RouteObject[] = [
   },
   {
     path: "/preview-notes",
+    mate: {
+      rule: "login",
+      backUrl: "/user",
+    },
     element: (
       <Suspense fallback={"加载中..."}>
         <PreviewNotes />
