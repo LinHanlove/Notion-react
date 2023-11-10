@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 
 import { Suspense, lazy } from "react";
-import TransitionRouter from "./TransitionRouter";
+import TransitionRouter, { removeHiddenRouter } from "./TransitionRouter";
 
 // 按需加载
 const Layout = lazy(() => import("@/Layout"));
@@ -29,22 +29,22 @@ export interface _NonIndexRouteObject extends NonIndexRouteObject {
   children?: _NonIndexRouteObject[];
   name?: string;
   mate?: {
+    pathName?: string;
     hidden?: boolean;
-    rule?: string;
-    backUrl?: string;
   };
 }
 
 export type _RouteObject = _IndexRouterObject | _NonIndexRouteObject;
 
+/* TAKE CARE */
 /**
- * name 专属menu菜单路由
- * mate 其他权限标识符
- *  hidden 控制该路由整体的显示隐藏
- *  rule: "", 相应权限
- *  backUrl: "", 不足权限跳转的页面路径
+ * 基础路由
+ * @params path     路径
+ * @params element  组件元素
+ * @params children 嵌套节点
+ * @params name     menu组件专属
+ * @params mate     路由鉴权规则 如下TransitionRouter
  */
-
 export const routes: _RouteObject[] = [
   {
     path: "/",
@@ -55,11 +55,10 @@ export const routes: _RouteObject[] = [
     ),
 
     children: [
-      { path: "", element: <Navigate to={"news"} /> },
+      { path: "", element: <Navigate to={"home"} /> },
       {
         path: "home",
         name: "首页",
-
         element: (
           <Suspense fallback={"加载中..."}>
             <Home />
@@ -69,9 +68,7 @@ export const routes: _RouteObject[] = [
       {
         path: "note-book",
         name: "笔记手账",
-        mate: {
-          hidden: false,
-        },
+
         element: (
           <Suspense fallback={"加载中..."}>
             <Notebook />
@@ -88,14 +85,7 @@ export const routes: _RouteObject[] = [
           </Suspense>
         ),
       },
-      // {
-      //   path: "cloud-music",
-      //   element: (
-      //     <Suspense fallback={"加载中..."}>
-      //       <Home />
-      //     </Suspense>
-      //   ),
-      // },
+
       {
         path: "/user",
         element: (
@@ -109,25 +99,21 @@ export const routes: _RouteObject[] = [
 
   {
     path: "/take-notes",
-    mate: {
-      rule: "login",
-      backUrl: "/user",
-    },
     element: (
       <Suspense fallback={"加载中..."}>
-        <TakeNotes />
+        <TransitionRouter auth={{ rule: "login", backUrl: "/user" }}>
+          <TakeNotes />
+        </TransitionRouter>
       </Suspense>
     ),
   },
   {
     path: "/preview-notes",
-    mate: {
-      rule: "login",
-      backUrl: "/user",
-    },
     element: (
       <Suspense fallback={"加载中..."}>
-        <PreviewNotes />
+        <TransitionRouter auth={{ rule: "login", backUrl: "/user" }}>
+          <PreviewNotes />
+        </TransitionRouter>
       </Suspense>
     ),
   },
@@ -142,4 +128,5 @@ export const routes: _RouteObject[] = [
     ),
   },
 ];
-export const route = createBrowserRouter(TransitionRouter(routes));
+
+export const route = createBrowserRouter(removeHiddenRouter(routes));
