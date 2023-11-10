@@ -1,6 +1,6 @@
 import { getToken } from "@/utils";
 import { ReactElement } from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 /**
  * removeHiddenRouter   隐藏路由鉴权规则
@@ -12,14 +12,10 @@ export default function TransitionRouter(props: {
   auth: { rule: string; backUrl: string };
   children: ReactElement;
 }) {
-  const location = useLocation();
-
-  if (props.auth) {
-    const { rule, backUrl } = props.auth;
-    console.log(location.pathname, props, rule, backUrl, "---");
-    // 未登录
-    if (rule == "login" && !getToken()) return <Navigate to={backUrl} />;
-  }
+  const { rule, backUrl } = props.auth;
+  // 登录鉴权
+  if (rule == "login" && !getToken()) return <Navigate to={backUrl} />;
+  // 管理员权限
   return props.children;
 }
 
@@ -41,8 +37,5 @@ export const removeHiddenRouter = (routes: any[]) => {
       if (inx != -1 && hidden) routes.splice(inx, 1);
     }
   });
-  console.log(routes, "--33--");
-
   return routes;
-  // 外层没有找到，递归查找内层
 };
