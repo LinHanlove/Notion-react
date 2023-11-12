@@ -1,4 +1,5 @@
-import { notification } from "antd";
+import { getToken, Notification } from "@/utils";
+
 import axios from "axios";
 
 /**
@@ -9,16 +10,6 @@ import axios from "axios";
  */
 const baseURL = import.meta.env.VITE_APP_BASE_API;
 
-const Notification = (type = "error", msg = "") => {
-  notification.open({
-    message: "寒寒提醒你",
-    description: msg,
-    type: type == "error" ? "error" : "success",
-    placement: "bottomRight",
-    duration: 2.5,
-  });
-};
-
 const request = axios.create({
   baseURL: baseURL,
   timeout: 5000,
@@ -27,6 +18,13 @@ const request = axios.create({
 // 添加请求拦截器
 request.interceptors.request.use(
   (config) => {
+    const token = getToken();
+    const timeStamp = new Date().getTime();
+    config.headers.set({
+      Authorization: `Content-Type`,
+      time: timeStamp,
+      token: token,
+    });
     // 在发送请求之前做些什么
     return config;
   },
@@ -44,16 +42,20 @@ request.interceptors.response.use(
     if (code == 200) {
       console.log(response.data.msg);
     }
-    if (code == 0) {
+    if (code !== 200) {
+      console.log(response.data.code, "响应拦截器");
       Notification("error", response.data.msg);
     }
+
     // 2xx 范围内的状态码都会触发该函数。
     // 对响应数据做点什么
-    console.log(response, "响应拦截器");
 
     return response.data;
   },
   (error) => {
+    // 超出 2xx 范围的状态码都会触发该函数。
+    // 对响应错误做点什么
+
     Notification("error", error);
     return Promise.reject(error);
   }

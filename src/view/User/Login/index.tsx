@@ -1,7 +1,10 @@
-import { setToken } from "@/utils";
+import { login } from "@/service";
+import { ResponseCode, setToken } from "@/utils";
 import { Button, Form, Input } from "antd";
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import md5 from "md5";
 
 const Login = () => {
   type FieldType = {
@@ -10,11 +13,22 @@ const Login = () => {
     remember?: string;
   };
   const navigate = useNavigate();
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
     console.log("login");
-    setToken("123456");
-    navigate("/home");
+    const res = await login({
+      username: userName,
+      password: md5(password),
+    });
+
+    if (res.code == ResponseCode.SUCCESS) {
+      const { token } = res.data;
+
+      setToken(token);
+      navigate("/home");
+    }
   };
 
   return (
@@ -33,7 +47,11 @@ const Login = () => {
           },
         ]}
       >
-        <Input placeholder="昵称" />
+        <Input
+          onChange={(e) => setUserName(e.target.value)}
+          value={userName}
+          placeholder="昵称"
+        />
       </Form.Item>
 
       <Form.Item<FieldType>
@@ -45,7 +63,11 @@ const Login = () => {
           },
         ]}
       >
-        <Input.Password placeholder="密码" />
+        <Input.Password
+          onChange={(e) => setPassword(e.target.value)}
+          value={password}
+          placeholder="密码"
+        />
       </Form.Item>
 
       {/* <Form.Item<FieldType> name="remember" valuePropName="checked">

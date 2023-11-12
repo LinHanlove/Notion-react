@@ -1,12 +1,34 @@
+import * as user from "@/service";
+import { ResponseCode } from "@/utils";
 import { Button, Form, Input } from "antd";
 import { motion } from "framer-motion";
+import { useState } from "react";
+import { Notification } from "@/utils";
 
 const Register = () => {
   type FieldType = {
     username: string;
     password: string;
     email: string;
-    code: number;
+    code: string;
+  };
+
+  const [userInfo, setUserInfo] = useState({
+    username: "",
+    password: "",
+    email: "",
+    code: "",
+  });
+  const getVerifyCode = async () => {
+    try {
+      const res = await user.getVerifyCode({
+        email: userInfo.email,
+        is_exist: 0,
+      });
+      if (res.code === ResponseCode.SUCCESS) Notification("success", res.msg);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleRegister = () => {
@@ -15,7 +37,7 @@ const Register = () => {
 
   return (
     <Form
-      className="md:w-[70%] w-[90%] md:h-[60%] "
+      className="md:w-[70%] w-[90%] md:h-[80%] [&>.ant-form-item]:mb-[18px]"
       name="basic"
       initialValues={{ remember: true }}
       autoComplete="off"
@@ -29,7 +51,16 @@ const Register = () => {
           },
         ]}
       >
-        <Input placeholder="昵称" />
+        <Input
+          onChange={(e) => {
+            setUserInfo({
+              ...userInfo,
+              username: e.target.value,
+            });
+          }}
+          value={userInfo.username}
+          placeholder="昵称"
+        />
       </Form.Item>
       <Form.Item<FieldType>
         name="password"
@@ -40,7 +71,16 @@ const Register = () => {
           },
         ]}
       >
-        <Input.Password placeholder="密码" />
+        <Input.Password
+          onChange={(e) => {
+            setUserInfo({
+              ...userInfo,
+              password: e.target.value,
+            });
+          }}
+          value={userInfo.password}
+          placeholder="密码"
+        />
       </Form.Item>
       <Form.Item<FieldType>
         name="email"
@@ -51,7 +91,16 @@ const Register = () => {
           },
         ]}
       >
-        <Input placeholder="邮箱" />
+        <Input
+          onChange={(e) => {
+            setUserInfo({
+              ...userInfo,
+              email: e.target.value,
+            });
+          }}
+          value={userInfo.email}
+          placeholder="邮箱"
+        />
       </Form.Item>
       <Form.Item<FieldType>
         name="code"
@@ -62,7 +111,16 @@ const Register = () => {
           },
         ]}
       >
-        <Input placeholder="验证码" />
+        <Input
+          onChange={(e) => {
+            setUserInfo({
+              ...userInfo,
+              code: e.target.value,
+            });
+          }}
+          value={userInfo.code}
+          placeholder="验证码"
+        />
       </Form.Item>
       <Form.Item<FieldType>
         name="code"
@@ -74,7 +132,12 @@ const Register = () => {
         ]}
       >
         <div className="flex items-center justify-center w-full h-full">
-          <Button className="w-1/2 h-full" block type="dashed">
+          <Button
+            onClick={getVerifyCode}
+            className="w-1/2 h-full"
+            type="link"
+            block
+          >
             获取验证码
           </Button>
         </div>
