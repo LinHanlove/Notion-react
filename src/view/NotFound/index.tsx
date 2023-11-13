@@ -22,9 +22,8 @@ export default function NotFound() {
   }, []);
 
   return (
-    <div className="w-full h-full relative flex justify-center items-center flex-col">
-      <div className=""></div>
-      <div ref={containerRef} className="w-full h-full  z-1"></div>
+    <div className="w-full h-[100vh] bg-[#fff] relative flex justify-center items-center flex-col">
+      <div ref={containerRef} className="z-1"></div>
 
       <Button
         onClick={() => {

@@ -26,7 +26,7 @@ export const login = (data: ILoginParams) => {
   return axios.request<ResponseResult<ILoginResult>>({
     url: "/api/user/login",
     method: "post",
-    params: data,
+    data,
   });
 };
 export interface IVerifyCodeParams {

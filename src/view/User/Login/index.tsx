@@ -25,6 +25,7 @@ const Login = () => {
 
     if (res.code == ResponseCode.SUCCESS) {
       const { token } = res.data;
+      console.log(res, "-----");
 
       setToken(token);
       navigate("/home");

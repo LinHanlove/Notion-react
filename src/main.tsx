@@ -23,6 +23,7 @@ const token = {
   borderRadius: 7,
   wireframe: false,
   colorSuccess: "#359207",
+  colorError: "#008080",
 };
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

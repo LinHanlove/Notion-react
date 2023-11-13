@@ -29,7 +29,7 @@ const Header = forwardRef((props: { children?: any }, ref: any) => {
       hidden: getToken() ? true : false,
       icon: "fa6-solid:user-graduate",
       event: () => {
-        // navigate("/user/login");
+        navigate("/personal-enter");
       },
     },
     {

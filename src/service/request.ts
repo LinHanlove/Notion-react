@@ -1,6 +1,13 @@
-import { getToken, Notification } from "@/utils";
+import { getToken } from "@/utils";
+import Notification from "@/components/Notification";
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 
-import axios from "axios";
+/** 重写axios类型 解决返回值泛型类型丢失的问题 */
+interface AxiosInstanceResponse<T = any> extends AxiosInstance {
+  request<R = AxiosResponse<T>, D = any>(
+    config: AxiosRequestConfig<D>
+  ): Promise<R>;
+}
 
 /**
  * axios的封装处理步骤：
@@ -10,7 +17,7 @@ import axios from "axios";
  */
 const baseURL = import.meta.env.VITE_APP_BASE_API;
 
-const request = axios.create({
+const request: AxiosInstanceResponse = axios.create({
   baseURL: baseURL,
   timeout: 5000,
 });
@@ -20,11 +27,9 @@ request.interceptors.request.use(
   (config) => {
     const token = getToken();
     const timeStamp = new Date().getTime();
-    config.headers.set({
-      Authorization: `Content-Type`,
-      time: timeStamp,
-      token: token,
-    });
+    config.headers["Authorization"] = `Bearer ${token}`;
+    config.headers["Content-Type"] = "application/json";
+    config.headers["time"] = timeStamp;
     // 在发送请求之前做些什么
     return config;
   },
@@ -39,24 +44,25 @@ request.interceptors.response.use(
   (response) => {
     const code = response.data.code;
 
-    if (code == 200) {
-      console.log(response.data.msg);
-    }
     if (code !== 200) {
-      console.log(response.data.code, "响应拦截器");
-      Notification("error", response.data.msg);
+      Notification({ type: "error", msg: response.data.msg, time: 2.5 });
     }
-
+    // 放行
+    if (code === 200) {
+      return response.data;
+    }
     // 2xx 范围内的状态码都会触发该函数。
     // 对响应数据做点什么
-
-    return response.data;
   },
   (error) => {
     // 超出 2xx 范围的状态码都会触发该函数。
     // 对响应错误做点什么
-
-    Notification("error", error);
+    const {
+      response: {
+        data: { message },
+      },
+    } = error;
+    Notification({ type: "error", msg: message, time: 2.5 });
     return Promise.reject(error);
   }
 );

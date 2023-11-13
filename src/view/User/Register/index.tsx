@@ -3,7 +3,8 @@ import { ResponseCode } from "@/utils";
 import { Button, Form, Input } from "antd";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Notification } from "@/utils";
+import Notification from "@/components/Notification";
+import md5 from "md5";
 
 const Register = () => {
   type FieldType = {
@@ -25,14 +26,24 @@ const Register = () => {
         email: userInfo.email,
         is_exist: 0,
       });
-      if (res.code === ResponseCode.SUCCESS) Notification("success", res.msg);
+
+      if (res.code == ResponseCode.SUCCESS) {
+        console.log(res.msg);
+        Notification({ type: "success", msg: res.msg, time: 2.5 });
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleRegister = () => {
-    console.log("register");
+  const handleRegister = async () => {
+    const res = await user.register({
+      ...userInfo,
+    });
+    if (res.code == ResponseCode.SUCCESS) {
+      console.log(res.msg);
+      Notification({ type: "success", msg: res.msg, time: 2.5 });
+    }
   };
 
   return (
@@ -75,7 +86,7 @@ const Register = () => {
           onChange={(e) => {
             setUserInfo({
               ...userInfo,
-              password: e.target.value,
+              password: md5(e.target.value),
             });
           }}
           value={userInfo.password}
@@ -122,15 +133,7 @@ const Register = () => {
           placeholder="验证码"
         />
       </Form.Item>
-      <Form.Item<FieldType>
-        name="code"
-        rules={[
-          {
-            required: true,
-            message: "Please input your Code!",
-          },
-        ]}
-      >
+      <Form.Item<FieldType>>
         <div className="flex items-center justify-center w-full h-full">
           <Button
             onClick={getVerifyCode}
@@ -142,10 +145,6 @@ const Register = () => {
           </Button>
         </div>
       </Form.Item>
-
-      {/* <Form.Item<FieldType> name="remember" valuePropName="checked">
-        <Checkbox>Remember me</Checkbox>
-      </Form.Item> */}
 
       <Form.Item className="box w-full flex justify-center">
         <motion.div

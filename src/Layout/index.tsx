@@ -22,17 +22,28 @@ export default function Layout() {
   const theme = useTheme();
 
   const [status, setStatus] = useState(true);
+  const [animationName, setAnimationName] = useState("");
 
-  // 监听日夜切换时的动画
-  document.addEventListener("animationend", function (event) {
-    const { animationName } = event;
-    if (animationName == "ocultar_sun" || animationName == "salida_sun") {
+  useEffect(() => {
+    const handleAnimationEnd = (event: { animationName: any }) => {
+      const { animationName } = event;
+      setAnimationName(animationName);
+    };
+
+    document.addEventListener("animationend", handleAnimationEnd);
+
+    return () => {
+      document.removeEventListener("animationend", handleAnimationEnd);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (animationName === "ocultar_sun" || animationName === "salida_sun") {
       setTimeout(() => {
         setStatus(false);
       }, 1500);
     }
-  });
-
+  }, [animationName]);
   // 滚动元素
   const scrollDom = useRef<HTMLDivElement>(null);
 

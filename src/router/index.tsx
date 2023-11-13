@@ -16,8 +16,8 @@ const NotFound = lazy(() => import("@/view/NotFound"));
 const TakeNotes = lazy(() => import("@/view/TakeNotes"));
 const PreviewNotes = lazy(() => import("@/view/PreviewNotes"));
 const TreeHole = lazy(() => import("@/view/TreeHole"));
-const User = lazy(() => import("@/view/user"));
-const Upload = lazy(() => import("@/components/Upload"));
+const User = lazy(() => import("@/view/User"));
+const PersonalCenter = lazy(() => import("@/view/User/PersonalCenter"));
 interface _IndexRouterObject extends IndexRouteObject {}
 export interface _NonIndexRouteObject extends NonIndexRouteObject {
   index?: false;
@@ -88,18 +88,24 @@ export const routes: _RouteObject[] = [
       {
         path: "upload",
         name: "上传图片",
-
-        element: (
-          <Suspense fallback={"加载中..."}>
-            <Upload />
-          </Suspense>
-        ),
+        mate: {
+          hidden: true,
+        },
+        element: <Suspense fallback={"加载中..."}></Suspense>,
       },
       {
         path: "/user",
         element: (
           <Suspense fallback={"加载中..."}>
             <User />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/personal-enter",
+        element: (
+          <Suspense fallback={"加载中..."}>
+            <PersonalCenter />
           </Suspense>
         ),
       },
