@@ -55,6 +55,51 @@ export const register = (data: IRegisterParams) => {
   return axios.request<ResponseResult>({
     url: "/api/user/register",
     method: "post",
+    data,
+  });
+};
+
+interface IGetUserInfoParams {
+  id: string | number;
+}
+interface IGetUserInfoResult {
+  id: number;
+  username: string;
+  nickname: string;
+  phone: number;
+  password: string;
+  avatar: string;
+  last_login_time: string;
+  birthday: object;
+  motto: string;
+  create_time: string;
+  email: string;
+}
+/** 获取用户信息 */
+export const getUserInfo = (data: IGetUserInfoParams) => {
+  return axios.request<ResponseResult<IGetUserInfoResult>>({
+    url: "/api/user/info",
+    method: "get",
     params: data,
+  });
+};
+
+interface IEditUserInfoParams {
+  id: number | string;
+  motto?: string;
+  is_edit: number;
+  nickname?: string;
+  avatar?: File;
+  birthday?: Date | string;
+  phone?: number | string;
+  email?: string;
+}
+
+/** 编辑用户信息 */
+export const editUserInfo = (data: IEditUserInfoParams) => {
+  return axios.request<ResponseResult>({
+    url: "/api/user/edit/userinfo",
+    method: "post",
+    data,
   });
 };

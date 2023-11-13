@@ -1,5 +1,5 @@
 import { login } from "@/service";
-import { ResponseCode, setToken } from "@/utils";
+import { ResponseCode, setToken, setUserInfo } from "@/utils";
 import { Button, Form, Input } from "antd";
 import { motion } from "framer-motion";
 import { useState } from "react";
@@ -24,10 +24,10 @@ const Login = () => {
     });
 
     if (res.code == ResponseCode.SUCCESS) {
-      const { token } = res.data;
-      console.log(res, "-----");
+      const { token, userinfo } = res.data;
 
       setToken(token);
+      setUserInfo(userinfo);
       navigate("/home");
     }
   };

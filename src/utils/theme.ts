@@ -1,18 +1,18 @@
 /* eslint-disable react-refresh/only-export-components */
 // token 存 取 删
 
-const THEME = "theme";
+const KEY = "theme";
 
 const setTheme = (token: any) => {
-  localStorage.setItem(THEME, token);
+  localStorage.setItem(KEY, token);
 };
 
 const getTheme = () => {
-  return localStorage.getItem(THEME);
+  return localStorage.getItem(KEY);
 };
 
 const removeTheme = () => {
-  localStorage.removeItem(THEME);
+  localStorage.removeItem(KEY);
 };
 
 export { setTheme, getTheme, removeTheme };

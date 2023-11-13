@@ -16,7 +16,7 @@ const NotFound = lazy(() => import("@/view/NotFound"));
 const TakeNotes = lazy(() => import("@/view/TakeNotes"));
 const PreviewNotes = lazy(() => import("@/view/PreviewNotes"));
 const TreeHole = lazy(() => import("@/view/TreeHole"));
-const User = lazy(() => import("@/view/User"));
+const User = lazy(() => import("@/view/User/index"));
 const PersonalCenter = lazy(() => import("@/view/User/PersonalCenter"));
 interface _IndexRouterObject extends IndexRouteObject {}
 export interface _NonIndexRouteObject extends NonIndexRouteObject {

@@ -2,6 +2,8 @@
 import { setToken, getToken, removeToken } from "@/utils/token";
 import { setTheme, getTheme, removeTheme } from "@/utils/theme";
 import { notification } from "antd";
+import { formatDate, optional } from "./utils";
+import { getUserInfo, removeUserInfo, setUserInfo } from "./userInfo";
 /**
  * 接口返回值
  */
@@ -27,5 +29,17 @@ export const Notification = (type = "error", msg = "") => {
   });
 };
 
-export { setToken, getToken, removeToken, setTheme, getTheme, removeTheme };
+export {
+  setToken,
+  getToken,
+  removeToken,
+  setTheme,
+  getTheme,
+  removeTheme,
+  optional,
+  formatDate,
+  setUserInfo,
+  getUserInfo,
+  removeUserInfo,
+};
 export type { ResponseResult };

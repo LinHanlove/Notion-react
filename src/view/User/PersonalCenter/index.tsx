@@ -1,11 +1,13 @@
-import { Avatar, Button, Form, Input } from "antd";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Avatar, Button, DatePicker, Form, Input } from "antd";
 import { motion } from "framer-motion";
 import md5 from "md5";
 import * as user from "@/service";
-import { useState } from "react";
-import { ResponseCode } from "@/utils";
+import { useEffect, useState } from "react";
+import { ResponseCode, getUserInfo, formatDate, optional } from "@/utils";
 import Notification from "@/components/Notification";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import TextArea from "antd/es/input/TextArea";
 
 export default function PersonalCenter() {
   type FieldType = {
@@ -15,69 +17,72 @@ export default function PersonalCenter() {
     code: string;
   };
 
+  const dateFormat = "YYYY 年 MM 月 DD 日";
+
   const [userInfo, setUserInfo] = useState({
     username: {
       value: "",
-      status: false,
+      status: true,
     },
     password: {
       value: "",
-      status: false,
+      status: true,
     },
     email: {
       value: "",
-      status: false,
+      status: true,
     },
     code: {
       value: "",
-      status: false,
+      status: true,
     },
     motto: {
       value: "",
-      status: false,
+      status: true,
     }, // 座右铭
     birthday: {
       value: "",
-      status: false,
+      status: true,
     }, // 生日
     phone: {
       value: "",
-      status: false,
+      status: true,
     }, //电话
     nickname: {
       value: "",
-      status: false,
+      status: true,
     }, //昵称
   });
 
-  // 修改输入框值和状态
-  const editUserInfo = (parent, targetValue, ModifyValue) => {
-    console.log(parent.targetValue, ModifyValue);
+  const user_id = JSON.parse(getUserInfo()!).id;
 
-    return setUserInfo({
-      ...parent,
-      targetValue: {
-        ...parent.targetValue,
-        ModifyValue: !parent.targetValue.ModifyValue,
-      },
+  const getUser = async () => {
+    const res = await user.getUserInfo({
+      id: user_id,
+    });
+    if (res.code === ResponseCode.SUCCESS) {
+      const { data } = res;
+      console.log(data, "---用户信息");
+    }
+  };
+
+  const editUserInfo = async () => {
+    const res = await user.editUserInfo({
+      id: user_id,
+      nickname: optional(userInfo.nickname.value),
+      motto: optional(userInfo.motto.value),
+      birthday: optional(userInfo.birthday.value),
+      phone: optional(userInfo.phone.value),
+      email: optional(userInfo.email.value),
+      is_edit: 0,
+      // avatar: "",
     });
   };
 
-  const getVerifyCode = async () => {
-    try {
-      const res = await user.getVerifyCode({
-        email: userInfo.email.value,
-        is_exist: 0,
-      });
+  useEffect(() => {
+    void getUser();
+  }, []);
 
-      if (res.code == ResponseCode.SUCCESS) {
-        console.log(res.msg);
-        Notification({ type: "success", msg: res.msg, time: 2.5 });
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
   const url =
     "https://avatars.githubusercontent.com/u/119206123?s=400&u=c687a9a31da1b18e8b93313bca02766b9478bd50&v=4";
   return (
@@ -90,45 +95,78 @@ export default function PersonalCenter() {
             initialValues={{ remember: true }}
             autoComplete="off"
           >
-            <Form.Item<FieldType>
-              name="code"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your Code!",
-                },
-              ]}
-            >
-              {/* <Input
-                prefix={
+            {/* 座右铭 */}
+            <Form.Item<FieldType>>
+              <div className="w-full h-full ">
+                <div className="text-lg ml-1 font-bold">
                   <Icon
                     className="text-teal-500 font-bold text-lg"
                     icon="line-md:edit"
                     onClick={() => {
-                      setDisabled({
-                        ...disabled,
-                        code: !disabled.code,
+                      setUserInfo({
+                        ...userInfo,
+                        motto: {
+                          ...userInfo.motto,
+                          status: !userInfo.motto.status,
+                        },
                       });
                     }}
                   />
-                }
-                onChange={(e) => {
-                  setUserInfo({
-                    ...userInfo,
-                    code: e.target.value,
-                  });
-                }}
-                disabled={disabled.code}
-                value={userInfo.code}
-                placeholder="手机号"
-              /> */}
+                </div>
+                <TextArea
+                  className="[&>textarea]:text-[teal] [&>textarea]:font-semibold"
+                  rows={6}
+                  placeholder="我的座右铭,正在激励我前进,你也留下你的吧"
+                  allowClear
+                  showCount
+                  onBlur={() => {
+                    setUserInfo({
+                      ...userInfo,
+                      motto: {
+                        ...userInfo.motto,
+                        status: true,
+                      },
+                    });
+                  }}
+                  onChange={(e) => {
+                    setUserInfo({
+                      ...userInfo,
+                      motto: {
+                        ...userInfo.motto,
+                        value: e.target.value,
+                      },
+                    });
+                  }}
+                  disabled={userInfo.motto.status}
+                  value={userInfo.motto.value}
+                  style={{
+                    resize: "none",
+                  }}
+                />
+              </div>
+            </Form.Item>
+            <Form.Item className="box w-full flex justify-center">
+              <motion.div
+                whileHover={{ scale: 1.2 }}
+                whileTap={{ scale: 0.9 }}
+                transition={{ type: "spring", stiffness: 500, damping: 20 }}
+              >
+                <Button
+                  className="text-[--text-color] bg-orange-500  font-bold"
+                  type="primary"
+                  htmlType="submit"
+                  // disabled
+                >
+                  提交🎉
+                </Button>
+              </motion.div>
             </Form.Item>
           </Form>
         </div>
         {/* 个人中心 */}
         <div className="md:w-1/2 w-full flex justify-center items-center">
           <div className="w-[80%] h-[80%] flex justify-center flex-col items-center">
-            <div className="w-full h-[20%] flex justify-center items-center mb-10">
+            <div className="w-full h-[20%] flex justify-center items-center my-10 ">
               <Avatar className="w-32 h-32 hover:animate-spin" src={url} />
             </div>
             <Form
@@ -137,25 +175,33 @@ export default function PersonalCenter() {
               initialValues={{ remember: true }}
               autoComplete="off"
             >
-              <Form.Item<FieldType>
-                name="username"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your username!",
-                  },
-                ]}
-              >
+              {/* 账号 */}
+              <Form.Item<FieldType>>
                 <Input
                   prefix={
                     <Icon
                       className="text-teal-500 font-bold text-lg"
                       icon="line-md:edit"
                       onClick={() => {
-                        editUserInfo(userInfo, "username", "status");
+                        setUserInfo({
+                          ...userInfo,
+                          username: {
+                            ...userInfo.username,
+                            status: !userInfo.username.status,
+                          },
+                        });
                       }}
                     />
                   }
+                  onBlur={() => {
+                    setUserInfo({
+                      ...userInfo,
+                      username: {
+                        ...userInfo.username,
+                        status: true,
+                      },
+                    });
+                  }}
                   onChange={(e) => {
                     setUserInfo({
                       ...userInfo,
@@ -167,137 +213,166 @@ export default function PersonalCenter() {
                   }}
                   disabled={userInfo.username.status}
                   value={userInfo.username.value}
+                  placeholder="账号"
+                />
+              </Form.Item>
+              {/* 昵称 */}
+              <Form.Item<FieldType>>
+                <Input
+                  prefix={
+                    <Icon
+                      className="text-teal-500 font-bold text-lg"
+                      icon="line-md:edit"
+                      onClick={() => {
+                        setUserInfo({
+                          ...userInfo,
+                          nickname: {
+                            ...userInfo.nickname,
+                            status: !userInfo.nickname.status,
+                          },
+                        });
+                      }}
+                    />
+                  }
+                  onBlur={() => {
+                    setUserInfo({
+                      ...userInfo,
+                      nickname: {
+                        ...userInfo.nickname,
+                        status: true,
+                      },
+                    });
+                  }}
+                  onChange={(e) => {
+                    setUserInfo({
+                      ...userInfo,
+                      nickname: {
+                        ...userInfo.nickname,
+                        value: e.target.value,
+                      },
+                    });
+                  }}
+                  disabled={userInfo.nickname.status}
+                  value={userInfo.nickname.value}
                   placeholder="昵称"
                 />
               </Form.Item>
-              {/* <Form.Item<FieldType>
-                name="password"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your password!",
-                  },
-                ]}
-              >
-                <Input.Password
-                  prefix={
-                    <Icon
-                      className="text-teal-500 font-bold text-lg"
-                      icon="line-md:edit"
-                      onClick={() => {
-                        setDisabled({
-                          ...disabled,
-                          password: !disabled.password,
-                        });
-                      }}
-                    />
-                  }
-                  onChange={(e) => {
-                    setUserInfo({
-                      ...userInfo,
-                      password: md5(e.target.value),
-                    });
-                  }}
-                  disabled={disabled.password}
-                  value={userInfo.password}
-                  placeholder="密码"
-                />
-              </Form.Item>
-              <Form.Item<FieldType>
-                name="email"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your email!",
-                  },
-                ]}
-              >
+
+              {/* 邮箱 */}
+              <Form.Item<FieldType>>
                 <Input
                   prefix={
                     <Icon
                       className="text-teal-500 font-bold text-lg"
                       icon="line-md:edit"
                       onClick={() => {
-                        setDisabled({
-                          ...disabled,
-                          email: !disabled.email,
+                        setUserInfo({
+                          ...userInfo,
+                          email: {
+                            ...userInfo.email,
+                            status: !userInfo.email.status,
+                          },
                         });
                       }}
                     />
                   }
+                  onBlur={() => {
+                    setUserInfo({
+                      ...userInfo,
+                      email: {
+                        ...userInfo.email,
+                        status: true,
+                      },
+                    });
+                  }}
                   onChange={(e) => {
                     setUserInfo({
                       ...userInfo,
-                      email: e.target.value,
+                      email: {
+                        ...userInfo.email,
+                        value: e.target.value,
+                      },
                     });
                   }}
-                  disabled={disabled.email}
-                  value={userInfo.email}
+                  disabled={userInfo.email.status}
+                  value={userInfo.email.value}
                   placeholder="邮箱"
                 />
               </Form.Item>
-              <Form.Item<FieldType>
-                name="code"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your Code!",
-                  },
-                ]}
-              >
+              {/* 手机号 */}
+              <Form.Item<FieldType>>
                 <Input
                   prefix={
                     <Icon
                       className="text-teal-500 font-bold text-lg"
                       icon="line-md:edit"
                       onClick={() => {
-                        setDisabled({
-                          ...disabled,
-                          code: !disabled.code,
+                        setUserInfo({
+                          ...userInfo,
+                          phone: {
+                            ...userInfo.phone,
+                            status: !userInfo.phone.status,
+                          },
                         });
                       }}
                     />
                   }
+                  onBlur={() => {
+                    setUserInfo({
+                      ...userInfo,
+                      phone: {
+                        ...userInfo.phone,
+                        status: true,
+                      },
+                    });
+                  }}
                   onChange={(e) => {
                     setUserInfo({
                       ...userInfo,
-                      code: e.target.value,
+                      phone: {
+                        ...userInfo.phone,
+                        value: e.target.value,
+                      },
                     });
                   }}
-                  disabled={disabled.code}
-                  value={userInfo.code}
-                  placeholder="验证码"
+                  disabled={userInfo.phone.status}
+                  value={userInfo.phone.value}
+                  placeholder="手机号"
                 />
               </Form.Item>
-
+              {/* 生日 */}
               <Form.Item<FieldType>>
-                <div className="flex items-center justify-center w-full h-full">
-                  <Button
-                    onClick={getVerifyCode}
-                    className="w-1/2 h-full"
-                    type="link"
-                    block
-                  >
-                    获取验证码
-                  </Button>
+                <div className="text-lg ml-1 font-bold">
+                  <Icon
+                    className="text-teal-500 font-bold text-lg"
+                    icon="line-md:edit"
+                    onClick={() => {
+                      setUserInfo({
+                        ...userInfo,
+                        birthday: {
+                          ...userInfo.birthday,
+                          status: !userInfo.birthday.status,
+                        },
+                      });
+                    }}
+                  />
                 </div>
-              </Form.Item> */}
-
-              <Form.Item className="box w-full flex justify-center">
-                <motion.div
-                  whileHover={{ scale: 1.2 }}
-                  whileTap={{ scale: 0.9 }}
-                  transition={{ type: "spring", stiffness: 500, damping: 20 }}
-                >
-                  <Button
-                    className="text-[--text-color] bg-orange-500  font-bold"
-                    type="primary"
-                    htmlType="submit"
-                    // disabled
-                  >
-                    提交🎉
-                  </Button>
-                </motion.div>
+                <DatePicker
+                  className="w-full"
+                  onChange={(date) => {
+                    setUserInfo({
+                      ...userInfo,
+                      birthday: {
+                        value: formatDate(date),
+                        status: true,
+                      },
+                    });
+                    console.log(formatDate(date));
+                  }}
+                  disabled={userInfo.birthday.status}
+                  placeholder="生日"
+                  format={dateFormat}
+                />
               </Form.Item>
             </Form>
           </div>

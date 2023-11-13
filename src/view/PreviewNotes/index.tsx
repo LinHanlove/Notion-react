@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { MdPreview, MdCatalog } from "md-editor-rt";
 import "md-editor-rt/lib/preview.css";
 import { Card, Avatar, Layout } from "antd";
