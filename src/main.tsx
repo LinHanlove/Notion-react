@@ -31,6 +31,12 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <ConfigProvider
       theme={{
         token,
+        components: {
+          Form: {
+            labelColor: "#008080",
+            itemMarginBottom: 18,
+          },
+        },
       }}
     >
       <StyleProvider hashPriority="high">

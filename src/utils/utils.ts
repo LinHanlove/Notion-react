@@ -1,3 +1,5 @@
+import { getToken } from ".";
+
 export const isNumber = (value: unknown): value is number => {
   return typeof value === "number";
 };
@@ -42,4 +44,43 @@ export const optional = <T>(value: T | null | undefined) => {
   return (
     ([null, undefined, ""] as any[]).includes(value) ? undefined : value
   ) as T | undefined;
+};
+
+/** 请求头处理 */
+export const buildHeaders = () => {
+  const token = getToken();
+  const timeStamp = new Date().getTime();
+  return {
+    // 登陆时返回的 token
+    Authorization: `Bearer ${token}`,
+    time: timeStamp,
+  };
+};
+/**请求数据处理 */
+export const dateToString = (data?: any) => {
+  if (!(data instanceof Object) || data instanceof FormData) {
+    return data;
+  }
+
+  const keys = Object.keys(data);
+
+  return keys.reduce<any>((previousValue, currentValue) => {
+    const value = data[currentValue];
+    previousValue[currentValue] =
+      value instanceof Date ? formatDateTime(value) : value;
+    return previousValue;
+  }, {});
+};
+
+export const formatDateTime = (value: any) => {
+  const date = value instanceof Date ? value : new Date(value);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const seconds = date.getSeconds();
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 };

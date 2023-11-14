@@ -70,7 +70,7 @@ interface IGetUserInfoResult {
   password: string;
   avatar: string;
   last_login_time: string;
-  birthday: object;
+  birthday: string;
   motto: string;
   create_time: string;
   email: string;
@@ -89,7 +89,6 @@ interface IEditUserInfoParams {
   motto?: string;
   is_edit: number;
   nickname?: string;
-  avatar?: File;
   birthday?: Date | string;
   phone?: number | string;
   email?: string;
@@ -101,5 +100,22 @@ export const editUserInfo = (data: IEditUserInfoParams) => {
     url: "/api/user/edit/userinfo",
     method: "post",
     data,
+  });
+};
+
+/* 上传文件 头像 背景图 */
+interface IUploadFileParams {
+  file: Blob;
+  id: string;
+}
+
+export const uploadFile = (data: IUploadFileParams) => {
+  const formData = new FormData();
+  formData.append("file", data.file);
+  formData.append("id", data.id);
+  return axios.request<ResponseResult>({
+    url: "/api/user/upload",
+    method: "POST",
+    data: formData,
   });
 };

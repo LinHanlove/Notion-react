@@ -1,6 +1,11 @@
-import { getToken } from "@/utils";
+import { buildHeaders, dateToString } from "@/utils";
 import Notification from "@/components/Notification";
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, {
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosRequestHeaders,
+  AxiosResponse,
+} from "axios";
 
 /** 重写axios类型 解决返回值泛型类型丢失的问题 */
 interface AxiosInstanceResponse<T = any> extends AxiosInstance {
@@ -25,11 +30,14 @@ const request: AxiosInstanceResponse = axios.create({
 // 添加请求拦截器
 request.interceptors.request.use(
   (config) => {
-    const token = getToken();
-    const timeStamp = new Date().getTime();
-    config.headers["Authorization"] = `Bearer ${token}`;
-    config.headers["Content-Type"] = "application/json";
-    config.headers["time"] = timeStamp;
+    config.params = dateToString(config.params);
+    // 不经过data处理 上传文件就没formData
+    config.data = dateToString(config.data);
+    config.headers = {
+      ...buildHeaders(),
+      ...config.headers,
+    } as unknown as AxiosRequestHeaders;
+
     // 在发送请求之前做些什么
     return config;
   },

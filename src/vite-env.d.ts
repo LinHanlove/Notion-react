@@ -5,3 +5,4 @@ declare module "react-typewriter-hook";
 declare module "react-redux";
 declare module "md-editor-rt";
 declare module "md5";
+declare module "dayjs";

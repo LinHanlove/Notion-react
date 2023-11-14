@@ -2,7 +2,7 @@
 import { setToken, getToken, removeToken } from "@/utils/token";
 import { setTheme, getTheme, removeTheme } from "@/utils/theme";
 import { notification } from "antd";
-import { formatDate, optional } from "./utils";
+import { buildHeaders, dateToString, formatDate, optional } from "./utils";
 import { getUserInfo, removeUserInfo, setUserInfo } from "./userInfo";
 /**
  * 接口返回值
@@ -41,5 +41,7 @@ export {
   setUserInfo,
   getUserInfo,
   removeUserInfo,
+  dateToString,
+  buildHeaders,
 };
 export type { ResponseResult };
