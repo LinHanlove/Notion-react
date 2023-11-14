@@ -12,12 +12,14 @@ import TransitionRouter, { removeHiddenRouter } from "./TransitionRouter";
 const Layout = lazy(() => import("@/Layout"));
 const Home = lazy(() => import("@/view/Home"));
 const Notebook = lazy(() => import("@/view/Notebook"));
-const NotFound = lazy(() => import("@/view/NotFound"));
+const NotFound = lazy(() => import("@/components/NotFound"));
 const TakeNotes = lazy(() => import("@/view/TakeNotes"));
 const PreviewNotes = lazy(() => import("@/view/PreviewNotes"));
 const TreeHole = lazy(() => import("@/view/TreeHole"));
 const User = lazy(() => import("@/view/User/index"));
 const PersonalCenter = lazy(() => import("@/view/User/PersonalCenter"));
+const Loaders = lazy(() => import("@/components/Loaders"));
+
 interface _IndexRouterObject extends IndexRouteObject {}
 export interface _NonIndexRouteObject extends NonIndexRouteObject {
   index?: false;
@@ -49,7 +51,7 @@ export const routes: _RouteObject[] = [
   {
     path: "/",
     element: (
-      <Suspense fallback={"加载中..."}>
+      <Suspense fallback={<Loaders />}>
         <Layout />
       </Suspense>
     ),
@@ -60,7 +62,9 @@ export const routes: _RouteObject[] = [
         path: "home",
         name: "首页",
         element: (
-          <Suspense fallback={"加载中..."}>
+          <Suspense
+            fallback={<div className="w-full h-full bg-[teal]">555</div>}
+          >
             <Home />
           </Suspense>
         ),
@@ -70,7 +74,7 @@ export const routes: _RouteObject[] = [
         name: "笔记手账",
 
         element: (
-          <Suspense fallback={"加载中..."}>
+          <Suspense fallback={<Loaders />}>
             <Notebook />
           </Suspense>
         ),
@@ -80,23 +84,25 @@ export const routes: _RouteObject[] = [
         name: "留言树洞",
 
         element: (
-          <Suspense fallback={"加载中..."}>
+          <Suspense fallback={<Loaders />}>
             <TreeHole />
           </Suspense>
         ),
       },
       {
-        path: "upload",
-        name: "上传图片",
+        path: "loaders",
         mate: {
           hidden: true,
+          pathName: "loaders",
         },
-        element: <Suspense fallback={"加载中..."}></Suspense>,
+        name: "加载页",
+        element: <Loaders />,
       },
+
       {
         path: "/user",
         element: (
-          <Suspense fallback={"加载中..."}>
+          <Suspense fallback={<Loaders />}>
             <User />
           </Suspense>
         ),
@@ -104,7 +110,7 @@ export const routes: _RouteObject[] = [
       {
         path: "/personal-enter",
         element: (
-          <Suspense fallback={"加载中..."}>
+          <Suspense fallback={<Loaders />}>
             <PersonalCenter />
           </Suspense>
         ),
@@ -115,7 +121,7 @@ export const routes: _RouteObject[] = [
   {
     path: "/take-notes",
     element: (
-      <Suspense fallback={"加载中..."}>
+      <Suspense fallback={<Loaders />}>
         <TransitionRouter auth={{ rule: "login", backUrl: "/user" }}>
           <TakeNotes />
         </TransitionRouter>
@@ -125,7 +131,7 @@ export const routes: _RouteObject[] = [
   {
     path: "/preview-notes",
     element: (
-      <Suspense fallback={"加载中..."}>
+      <Suspense fallback={<Loaders />}>
         <TransitionRouter auth={{ rule: "login", backUrl: "/user" }}>
           <PreviewNotes />
         </TransitionRouter>
@@ -137,7 +143,7 @@ export const routes: _RouteObject[] = [
   {
     path: "*",
     element: (
-      <Suspense fallback={"加载中..."}>
+      <Suspense fallback={<Loaders />}>
         <NotFound />
       </Suspense>
     ),

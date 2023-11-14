@@ -3,7 +3,8 @@ import { ReactElement } from "react";
 import { Navigate } from "react-router-dom";
 
 /**
- * removeHiddenRouter   隐藏路由鉴权规则
+
+ * TransitionRouter     登录路由鉴权规则
  * @parent auth         传递参数对象
  * @params rule         检验规则
  * @params backUrl      未通过校验跳转路由地址
@@ -20,7 +21,7 @@ export default function TransitionRouter(props: {
 }
 
 /**
- * TransitionRouter     登录路由鉴权规则
+ * removeHiddenRouter   隐藏路由鉴权规则
  * @parent mate         路由鉴权规则
  * @params pathName     对比路径
  * @params hidden       隐藏路由标识
