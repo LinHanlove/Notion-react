@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { MdEditor } from "md-editor-rt";
 import "md-editor-rt/lib/style.css";
-import { Button, Input, message } from "antd";
+import { Button, Input } from "antd";
 import { Icon } from "@iconify/react";
 import "md-editor-rt/lib/preview.css";
+import TakeNotesDrawer from "@/components/TakeNotesDrawer";
 
 import MdThemeStyle from "@/components/MdThemeStyle/index";
 
@@ -12,32 +13,18 @@ export default () => {
 
   const [previewTheme, setPreviewTheme] = useState("default");
 
-  const [save, setSave] = useState("");
-
-  const handleSave = (val: string) => {
-    setStatus(true);
-    setSave(val);
-    localStorage.setItem("text", val);
-  };
+  const [article, setArticle] = useState({
+    title: "",
+    article_content: "",
+    preview_theme: "",
+  });
 
   const handleChildData = (childData: string) => {
     // 在这里处理来自子组件的数据
     setPreviewTheme(childData);
   };
 
-  const [status, setStatus] = useState(false);
-
-  const handleRelease = (val: string) => {
-    console.log(status);
-
-    if (!status) {
-      message.success("保存后提交哦");
-    } else {
-      localStorage.setItem("text", JSON.stringify([val, previewTheme]));
-      message.success("已发布");
-      setStatus(false);
-    }
-  };
+  const [isOpen, setIsOpen] = useState(false);
 
   const [data] = useState({
     toobars: [
@@ -58,7 +45,6 @@ export default () => {
       "revoke",
       "next",
       "=",
-      "save",
       0,
       "pageFullscreen",
       "catalog",
@@ -72,6 +58,12 @@ export default () => {
     <div className="w-[100vw] h-[100vh] bg-[#fff] ">
       <div className="w-full h-[10vh] flex justify-between items-center md:flex-nowrap flex-wrap   ">
         <Input
+          onBlur={(e) =>
+            setArticle({
+              ...article,
+              title: e.target.value,
+            })
+          }
           placeholder="输入文章标题..."
           className="md:w-4/5 w-full  md:ml-8 border-0 text-xl font-bold focus:border-0 focus:shadow-none placeholder:text-lg "
         />
@@ -81,7 +73,15 @@ export default () => {
             className="w-40 md:h-10 h-6 flex justify-center items-center text-[var(--text-color)] font-bold"
             shape="round"
             size="large"
-            onClick={() => handleRelease(save)}
+            onClick={() => {
+              setArticle({
+                ...article,
+                preview_theme: previewTheme,
+                article_content: text,
+              });
+
+              setIsOpen(true);
+            }}
           >
             <Icon
               icon="game-icons:scroll-quill"
@@ -97,12 +97,16 @@ export default () => {
           defToolbars={[<MdThemeStyle onData={handleChildData} />]}
           modelValue={text}
           onChange={setText}
-          onSave={handleSave}
           previewTheme={previewTheme}
           toolbars={data.toobars}
           toolbarsExclude={data.toolbarsExclude}
         />
       </div>
+      <TakeNotesDrawer
+        articleContent={article}
+        isOpen={isOpen}
+        setOpen={(e: boolean) => setIsOpen(e)}
+      />
     </div>
   );
 };

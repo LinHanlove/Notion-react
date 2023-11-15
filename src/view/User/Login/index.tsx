@@ -1,4 +1,4 @@
-import { login } from "@/service";
+import { login } from "@/service/user";
 import { ResponseCode, setToken, setUserInfo } from "@/utils";
 import { Button, Form, Input } from "antd";
 import { motion } from "framer-motion";

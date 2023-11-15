@@ -3,7 +3,7 @@ import { Button, Modal, Upload, UploadFile, UploadProps, message } from "antd";
 import ImgCrop from "antd-img-crop";
 import { RcFile, UploadChangeParam } from "antd/es/upload";
 import { useState } from "react";
-import * as user from "@/service";
+import * as user from "@/service/user";
 import { ResponseCode } from "@/utils";
 
 export default function UploadAvatarModel(props: {

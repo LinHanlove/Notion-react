@@ -62,7 +62,7 @@ export const register = (data: IRegisterParams) => {
 interface IGetUserInfoParams {
   id: string | number;
 }
-interface IGetUserInfoResult {
+export interface IGetUserInfoResult {
   id: number;
   username: string;
   nickname: string;
@@ -74,6 +74,7 @@ interface IGetUserInfoResult {
   motto: string;
   create_time: string;
   email: string;
+  personal_articles_count: number;
 }
 /** 获取用户信息 */
 export const getUserInfo = (data: IGetUserInfoParams) => {

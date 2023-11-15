@@ -6,3 +6,4 @@ declare module "react-redux";
 declare module "md-editor-rt";
 declare module "md5";
 declare module "dayjs";
+declare module "rc-select/lib/BaseSelect";

@@ -1,10 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { TransitionDown, TransitionUp } from "@/components/Transition";
 import { ClockCircleOutlined } from "@ant-design/icons";
 import { Button, Timeline } from "antd";
 import { Icon } from "@iconify/react";
 import { useNavigate } from "react-router-dom";
+import * as article from "@/service/article";
+import { useEffect } from "react";
+import { ResponseCode, getUserInfo } from "@/utils";
+
 export default function Notebook() {
   const navigate = useNavigate();
+  const user = JSON.parse(getUserInfo()!);
   // 写笔记
   const handleMdEditor = () => {
     navigate("/take-notes");
@@ -13,6 +19,22 @@ export default function Notebook() {
   const handleMdPreview = () => {
     navigate("/preview-notes");
   };
+
+  const getUserArticleList = async () => {
+    try {
+      const res = await article.getUserArticleList({
+        author_id: user.id,
+      });
+      if (res.code === ResponseCode.SUCCESS) console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    void getUserArticleList();
+  }, []);
+
   return (
     <div>
       <TransitionDown>

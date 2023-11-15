@@ -1,14 +1,58 @@
 import { Avatar, Button, Card, Input, Image } from "antd";
 import { Icon } from "@iconify/react";
 import { useScrollable } from "@/hooks/useScrollable";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { moduleList } from "@/mock";
 import { motion } from "framer-motion";
+import * as article from "@/service/article";
+import * as user from "@/service/user";
+import { ResponseCode, getUserInfo, optional, setUserInfo } from "@/utils";
+import { IGetUserInfoResult } from "@/service/user";
 
 export default function HomeContainer() {
   const container = useRef<HTMLDivElement>(null);
+
   const url =
     "https://avatars.githubusercontent.com/u/119206123?s=400&u=c687a9a31da1b18e8b93313bca02766b9478bd50&v=4";
+
+  const userInfo = JSON.parse(getUserInfo()!);
+
+  const [info, setInfo] = useState<IGetUserInfoResult>();
+
+  const [search, setSearch] = useState("");
+
+  /** 获取用户信息 */
+  const getUserinfo = async () => {
+    try {
+      const res = await user.getUserInfo({
+        id: userInfo.id,
+      });
+      if (res.code === ResponseCode.SUCCESS) {
+        setInfo(res.data);
+        setUserInfo(res.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  /* 搜索 */
+  const handleSearch = async () => {
+    const res = await article.getAllArticleList({
+      search: optional(search),
+      page: 1,
+      page_size: 3,
+    });
+    if (res.code === ResponseCode.SUCCESS) {
+      console.log(res);
+    }
+  };
+
+  useEffect(() => {
+    void getUserinfo();
+    void handleSearch();
+  }, []);
+
   return (
     <div className="h-auto  bg-[--background] SmileySans flex justify-center py-5">
       <div className="md:w-[70vw] w-[90%] flex flex-wrap">
@@ -18,18 +62,21 @@ export default function HomeContainer() {
           <Card className="md:md:w-[80%] bg-[--background] text-[--text-color]  w-[100%] h-auto m-[0_auto] group overflow-hidden border-0  [&>.ant-card-body]:w-full [&>.ant-card-body]:h-full [&>.ant-card-body]:p-2  rounded-xl duration-500  ease-linear shadow-[0_8px_10px_8px_var(--borderHoverColor)]">
             <div className="w-full h-[12vh] relative flex items-center justify-center">
               <div className="">
-                <Avatar className="w-[10vh] h-[10vh] animate-spin" src={url} />
+                <Avatar
+                  className="w-[10vh] h-[10vh] animate-spin"
+                  src={info?.avatar ?? url}
+                />
               </div>
             </div>
 
             <div className="w-full h-auto m-[0_auto]  px-4 flex justify-center items-center flex-col ">
               <div className="text-[2rem] font-bold my-2 text-center text-[var(--text-color)]">
-                Notion
+                {info?.username}
               </div>
               <div className="w-full flex justify-between items-center px-2 text-[var(--text-color)] font-[var(--globalFont),serif] font-bold break-words">
                 <div className="flex justify-center flex-col items-center">
                   <div>文章</div>
-                  <div>140</div>
+                  <div> {info?.personal_articles_count}</div>
                 </div>
                 <div className="flex justify-center flex-col items-center">
                   <div>分类</div>
@@ -63,10 +110,12 @@ export default function HomeContainer() {
             </div>
             <div className="mt-4">
               <Input
+                onBlur={(e) => setSearch(e.target.value)}
                 placeholder="Enter your username"
                 className="rounded-[4rem] border-[var(--lightGreen)]  "
                 suffix={
                   <Icon
+                    onClick={handleSearch}
                     icon="ph:radio-button-fill"
                     className="text-[1.4rem] text-[var(--lightGreen)] "
                   />

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Avatar, Button, DatePicker, Form, Input } from "antd";
 import { motion } from "framer-motion";
-import * as user from "@/service";
+import * as user from "@/service/user";
 import { useEffect, useState } from "react";
 import { ResponseCode, getUserInfo, formatDate, optional } from "@/utils";
 import Notification from "@/components/Notification";
