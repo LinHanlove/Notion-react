@@ -54,7 +54,7 @@ export default function HomeContainer() {
   }, []);
 
   return (
-    <div className="h-auto  bg-[--background] SmileySans flex justify-center py-5">
+    <div className="h-auto w-full  bg-[--background] SmileySans flex justify-center py-5">
       <div className="md:w-[70vw] w-[90%] flex flex-wrap">
         {/* 左 */}
         <div className="h-auto md:w-[30%] w-full ">

@@ -1,20 +1,29 @@
 import HomeContainer from "@/view/HomeContainer";
 import { TransitionDown, TransitionUp } from "@/components/Transition";
 import Typewriter from "../Typewriter";
+import homeBg from "@/assets/images/homeBg.jpg";
 
 export default function Home() {
   return (
-    <div>
-      <TransitionDown>
-        <div
-          className={`h-[100vh] w-full pt-[--header] bg-[url(https://img.touxiangwu.com/zb_users/upload/2022/10/202210161665903661597939.jpg)] bg-cover bg-no-repeat`}
-        >
-          {Typewriter()}
+    <div className="w-full h-full">
+      <img src={homeBg} alt="" className=" absolute z-[-1] w-full h-full"></img>
+      <div className=" relative w-full z-10 h-auto ">
+        <div className="w-full h-[100vh]  z-[999]">
+          <TransitionDown>
+            <div className={`h-[100vh] absolute z-1 w-full  pt-[--header] `}>
+              {Typewriter()}
+            </div>
+          </TransitionDown>
         </div>
-      </TransitionDown>
-      <TransitionUp>
-        <HomeContainer />
-      </TransitionUp>
+        <div className="absolute z-[999] w-full">
+          <TransitionUp>
+            <HomeContainer />
+          </TransitionUp>
+        </div>
+      </div>
     </div>
   );
 }
+// {
+
+// }

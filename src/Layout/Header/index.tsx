@@ -83,7 +83,7 @@ const Header = forwardRef((props: { children?: any }, ref: any) => {
   return (
     <header
       ref={ref}
-      className="h-[8vh] bg-[transparent]  w-full absolute top-0 z-10 px-4 flex justify-between items-center [&>.ant-menu-light]:bg-[transparent]  [&>.ant-menu-horizontal]:border-none "
+      className="h-[8vh] bg-[transparent]  w-full absolute top-0 z-[999] px-4 flex justify-between items-center [&>.ant-menu-light]:bg-[transparent]  [&>.ant-menu-horizontal]:border-none "
     >
       <div className="w-[10vw] text-[20px] text-[#fff] overflow-hidden">
         <Logo />
