@@ -1,5 +1,5 @@
 import axios from "./request";
-import { ResponseResult } from "@/utils";
+import { ResponsePageInfoResult, ResponseResult } from "@/utils";
 
 interface IAddArticle {
   title: string;
@@ -51,12 +51,47 @@ export const getUserArticleList = (data: IUserArticleListParams) => {
   });
 };
 
-interface IAllArticleListParams {}
+interface getSearchArticleList {
+  search?: string;
+  page?: number;
+  page_size?: number;
+}
+export interface IGetSearchArticleListRes {
+  article_id: number;
+  title: string;
+  create_at: string;
+  article_content: string;
+  author_id: number;
+  update_at: object;
+  article_cover: string;
+  viewers: number;
+  like: number;
+  article_label: string[];
+  article_summary: string;
+  preview_theme: string;
+  author_name: string;
+  username: string;
+  nickname: string;
+  avatar: string;
+}
 
 /** 获取所有文章 */
-export const getAllArticleList = (data: IAllArticleListParams) => {
-  return axios.request<ResponseResult>({
+export const getSearchArticleList = (data: getSearchArticleList) => {
+  return axios.request<
+    ResponseResult<ResponsePageInfoResult<IGetSearchArticleListRes[]>>
+  >({
     url: "/api/article/all/article/list",
+    method: "get",
+    params: data,
+  });
+};
+
+/** 获取推荐文章 */
+export const getRecommendArticleList = (data: getSearchArticleList) => {
+  return axios.request<
+    ResponseResult<ResponsePageInfoResult<IGetSearchArticleListRes[]>>
+  >({
+    url: "/api/article/recommend/article/list",
     method: "get",
     params: data,
   });

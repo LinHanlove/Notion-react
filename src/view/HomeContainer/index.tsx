@@ -1,13 +1,23 @@
-import { Avatar, Button, Card, Input, Image } from "antd";
+/* eslint-disable react-hooks/exhaustive-deps */
+import {
+  Avatar,
+  Button,
+  Card,
+  Input,
+  Image,
+  Divider,
+  Pagination,
+  PaginationProps,
+} from "antd";
 import { Icon } from "@iconify/react";
 import { useScrollable } from "@/hooks/useScrollable";
-import { useEffect, useRef, useState } from "react";
-import { moduleList } from "@/mock";
+import GgUrl from "@/assets/images/bg.jpg";
 import { motion } from "framer-motion";
 import * as article from "@/service/article";
 import * as user from "@/service/user";
 import { ResponseCode, getUserInfo, optional, setUserInfo } from "@/utils";
 import { IGetUserInfoResult } from "@/service/user";
+import { IGetSearchArticleListRes } from "@/service/article";
 
 export default function HomeContainer() {
   const container = useRef<HTMLDivElement>(null);
@@ -37,20 +47,62 @@ export default function HomeContainer() {
   };
 
   /* 搜索 */
+  const [resData, setResData] = useState<IGetSearchArticleListRes[]>([]);
+
+  const [recommend, setRecommend] = useState<IGetSearchArticleListRes[]>([]);
+
+  /** 搜索 */
   const handleSearch = async () => {
-    const res = await article.getAllArticleList({
+    const res = await article.getSearchArticleList({
       search: optional(search),
-      page: 1,
-      page_size: 3,
+      page: pageInfo.page,
+      page_size: pageInfo.page_size,
     });
     if (res.code === ResponseCode.SUCCESS) {
-      console.log(res);
+      setSearch("");
+      setResData(res.data.data);
+      setPageInfo({
+        ...pageInfo,
+        count: res.data.total.count,
+      });
     }
   };
+  /** 获取推荐列表 */
+  const getRecommendArticleList = async () => {
+    try {
+      const res = await article.getRecommendArticleList({
+        search: optional(search),
+        page: pageInfo.page,
+        page_size: 2,
+      });
+      if (res.code === ResponseCode.SUCCESS) {
+        setRecommend(res.data.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [pageInfo, setPageInfo] = useState({
+    page: 1,
+    page_size: 10,
+    count: 0,
+  });
+
+  const onChange: PaginationProps["onChange"] = (pageNum) => {
+    setPageInfo({
+      ...pageInfo,
+      page: pageNum,
+    });
+  };
+  useEffect(() => {
+    void handleSearch();
+  }, [pageInfo.page]);
 
   useEffect(() => {
     void getUserinfo();
     void handleSearch();
+    void getRecommendArticleList();
   }, []);
 
   return (
@@ -59,7 +111,7 @@ export default function HomeContainer() {
         {/* 左 */}
         <div className="h-auto md:w-[30%] w-full ">
           {/* 个人介绍 */}
-          <Card className="md:md:w-[80%] bg-[--background] text-[--text-color]  w-[100%] h-auto m-[0_auto] group overflow-hidden border-0  [&>.ant-card-body]:w-full [&>.ant-card-body]:h-full [&>.ant-card-body]:p-2  rounded-xl duration-500  ease-linear shadow-[0_8px_10px_8px_var(--borderHoverColor)]">
+          <Card className="md:md:w-[80%] bg-[--background] text-[--text-color]  w-[100%] h-auto m-[0_auto] group overflow-hidden   [&>.ant-card-body]:w-full [&>.ant-card-body]:h-full [&>.ant-card-body]:p-2  rounded-xl duration-500  ease-linear shadow-box">
             <div className="w-full h-[12vh] relative flex items-center justify-center">
               <div className="">
                 <Avatar
@@ -104,27 +156,34 @@ export default function HomeContainer() {
             </div>
           </Card>
           {/* 搜索 */}
-          <Card className="md:md:w-[80%]  w-[100%] m-[0_auto] border-0  [&>.ant-card-body]:w-full [&>.ant-card-body]:h-full [&>.ant-card-body]:p-2  bg-[var(--background)]  shadow-[0_5px_10px_5px_var(--borderHoverColor)] mt-8">
+          <Card className="md:md:w-[80%]  w-[100%] m-[0_auto] shadow-box  [&>.ant-card-body]:w-full [&>.ant-card-body]:h-full [&>.ant-card-body]:p-2  bg-[var(--background)]   mt-8">
             <div className="w-full text-[1.4rem] text-[var(--lightGreen)] font-bold">
               搜索
             </div>
-            <div className="mt-4">
+            <div className="mt-4 mb-2 [&>.ant-input-affix-wrapper:focus-within]:shadow-[0_0_0_1px_teal]">
               <Input
-                onBlur={(e) => setSearch(e.target.value)}
-                placeholder="Enter your username"
-                className="rounded-[4rem] border-[var(--lightGreen)]  "
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="搜索文章"
+                className="rounded-[4rem] h-7 border-[var(--lightGreen)] "
                 suffix={
-                  <Icon
+                  <motion.div
                     onClick={handleSearch}
-                    icon="ph:radio-button-fill"
-                    className="text-[1.4rem] text-[var(--lightGreen)] "
-                  />
+                    whileHover={{ scale: 1.2 }}
+                    whileTap={{ scale: 0.9 }}
+                    transition={{ type: "spring", stiffness: 500, damping: 20 }}
+                  >
+                    <Icon
+                      icon="ph:radio-button-fill"
+                      className="text-[1.4rem] text-[var(--lightGreen)] "
+                    />
+                  </motion.div>
                 }
               />
             </div>
           </Card>
           {/* 推荐文章 */}
-          <Card className="md:w-[80%] w-[100%] m-[0_auto]  [&>.ant-card-body]:w-full [&>.ant-card-body]:h-full [&>.ant-card-body]:p-2  border-0 bg-[var(--background)]  shadow-[0_5px_10px_5px_var(--borderHoverColor)] mt-8">
+          <Card className="md:w-[80%] w-[100%] m-[0_auto]  [&>.ant-card-body]:w-full [&>.ant-card-body]:h-full [&>.ant-card-body]:p-2  border-0 bg-[var(--background)]  shadow-box mt-8">
             <div className="w-full text-[1.4rem] text-[var(--lightGreen)] font-bold flex items-center ">
               <Icon
                 icon="ion:book-outline"
@@ -133,22 +192,23 @@ export default function HomeContainer() {
               推荐文章
             </div>
             <div className="mt-4">
-              {[1, 2].map((inx) => {
+              {recommend?.map((i) => {
                 return (
-                  <div className="w-full  h-[10vh] my-2" key={inx}>
+                  <div className="w-full  h-[10vh] my-2" key={i.article_id}>
                     <div className="w-full h-[8vh] flex ">
                       <div className="w-2/5 rounded-lg h-full overflow-hidden">
-                        <Image src={url} className="w-full h-full" />
+                        <Image
+                          src={i.article_cover === "" ? GgUrl : i.article_cover}
+                          className="w-full h-full"
+                        />
                       </div>
                       <div className="w-3/5 rounded-lg h-full truncate text-[1rem] font-extrabold ml-2 text-[var(--text-color)]">
-                        {inx == 1
-                          ? "生活倒影 | 无所期待的日子"
-                          : "随笔 | 我们还年轻还在在路上"}
+                        {i.article_summary}
                       </div>
                     </div>
                     <div className="w-full text-[0.7rem] text-[var(--greyFont)] flex items-center">
                       <Icon icon="fluent-mdl2:date-time" className="mr-2" />
-                      <div>2023-09-08 11:25:26</div>
+                      <div>{i.create_at}</div>
                     </div>
                   </div>
                 );
@@ -156,7 +216,7 @@ export default function HomeContainer() {
             </div>
           </Card>
           {/* 赞赏名单 */}
-          <Card className="md:w-[80%] w-[100%] m-[0_auto] bg-[--background]  h-[40vh] border-0   [&>.ant-card-body]:w-full [&>.ant-card-body]:h-full [&>.ant-card-body]:p-2  shadow-[0_5px_10px_5px_var(--borderHoverColor)] mt-8">
+          <Card className="md:w-[80%] w-[100%] m-[0_auto] bg-[--background]  h-[40vh] border-0   [&>.ant-card-body]:w-full [&>.ant-card-body]:h-full [&>.ant-card-body]:p-2  shadow-box mt-8">
             <div className="h-full">
               <div className="w-full h-[10%] text-[1.4rem]  text-[var(--lightGreen)] font-bold flex items-center ">
                 <Icon icon="fa6-solid:cat" className="mr-4 text-center" />
@@ -205,7 +265,6 @@ export default function HomeContainer() {
                     whileTap={{ scale: 0.9 }}
                     transition={{ type: "spring", stiffness: 400, damping: 17 }}
                   >
-                    {" "}
                     <div>🎉 赞赏 🎉</div>
                   </motion.div>
                 </Button>
@@ -225,7 +284,13 @@ export default function HomeContainer() {
             </div>
             <div className="text-[1rem] font-bold text-[var(--greyFont)] md:w-[80%] w-[100%] ">
               <div className="my-2  w-full break-words  h-auto">
-                git仓库 : https://gitee.com/linhanlove/notion
+                git仓库 :
+                <NavLink
+                  className="text-[teal]"
+                  to="https://gitee.com/linhanlove/notion"
+                >
+                  https://gitee.com/linhanlove/notion
+                </NavLink>
               </div>
               <div className="my-2">其他通知...</div>
             </div>
@@ -239,16 +304,16 @@ export default function HomeContainer() {
           </div>
           {/* 模块列表 */}
           <div>
-            {moduleList.map((i, inx) => {
+            {resData?.map((i, inx) => {
               return inx % 2 == 0 ? (
                 <Card
-                  key={inx}
-                  className="h-[30vh] [&>.ant-card-body]:overflow-hidden  [&>.ant-card-body]:w-full [&>.ant-card-body]:flex [&>.ant-card-body]:h-full [&>.ant-card-body]:p-0  md:h-[24vh] md:w-[80%] w-[100%] m-[0_auto] flex  rounded-lg border-0 bg-[var(--background)]  shadow-[0_5px_10px_5px_var(--borderHoverColor)] mt-8"
+                  key={i.article_id}
+                  className="h-[30vh] [&>.ant-card-body]:overflow-hidden  [&>.ant-card-body]:w-full [&>.ant-card-body]:flex [&>.ant-card-body]:h-full [&>.ant-card-body]:p-0  md:h-[24vh] md:w-[80%] w-[100%] m-[0_auto] flex  rounded-[12px] border-0 bg-[var(--background)]  shadow-box mt-8"
                 >
                   <div className="w-1/2 p-5">
                     <div className="text-sm font-bold text-[var(--text-color)] flex items-center">
                       <Icon icon="clarity:date-line" />
-                      <div className="ml-2">发布于：{i.time}</div>
+                      <div className="ml-2">发布于：{i.create_at}</div>
                     </div>
                     <div className="my-2 text-2xl font-bold text-[var(--text-color)]">
                       {i.title}
@@ -256,7 +321,7 @@ export default function HomeContainer() {
                     <div className="text-sm font-bold text-[var(--text-color)] flex items-center">
                       <div className="flex items-center">
                         <Icon icon="mdi:hot" className="text-[red] mr-1" />
-                        <div>{i.hot}</div>
+                        <div>{i.viewers}</div>
                       </div>
                       <div className="flex items-center mx-5">
                         <Icon icon="jam:write" className=" mr-1" />
@@ -268,28 +333,25 @@ export default function HomeContainer() {
                       </div>
                     </div>
                     <div className="text-sm font-bold text-[var(--text-color)] truncate mt-2">
-                      {i.info}
+                      {i.article_summary}
                     </div>
                     <div className="text-sm font-bold  mt-2 flex  items-center">
-                      <div className="flex items-center  rounded-lg text-[var(--lightGreen)] border-dashed border  border-[var(--lightGray)] px-1">
-                        <Icon
-                          icon="solar:bookmark-opened-outline"
-                          className="text-[orange] mr-[8px]"
-                        />
-                        {i.plate}
-                      </div>
-                      <div className="flex items-center ml-6 rounded-lg text-[var(--lightGreen)] border-dashed border  border-[var(--lightGray)] px-1">
-                        <Icon
-                          icon="game-icons:feather"
-                          className="text-[var(--lightGreen)]  mr-2"
-                        />
-                        {i.stort}
-                      </div>
+                      {i.article_label.map((label: string) => {
+                        return (
+                          <div className="flex items-center  rounded-lg text-[var(--lightGreen)] border-dashed border  border-[var(--lightGray)] px-1">
+                            <Icon
+                              icon="solar:bookmark-opened-outline"
+                              className="text-[orange] mr-[8px]"
+                            />
+                            {label}
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
-                  <div className="w-1/2 h-full overflow-hidden rounded-lg">
+                  <div className="w-1/2 h-full overflow-hidden rounded-[0_12px_12px_0]">
                     <img
-                      src={i.img}
+                      src={i.article_cover === "" ? GgUrl : i.article_cover}
                       alt=""
                       className="w-full h-full   duration-500  ease-linear hover:scale-[1.2]"
                     />
@@ -298,19 +360,19 @@ export default function HomeContainer() {
               ) : (
                 <Card
                   key={inx}
-                  className="h-[30vh] md:h-[24vh] md:w-[80%] [&>.ant-card-body]:overflow-hidden  [&>.ant-card-body]:w-full [&>.ant-card-body]:flex [&>.ant-card-body]:h-full [&>.ant-card-body]:p-0 w-[100%] m-[0_auto] flex  border-0 bg-[var(--background)]  shadow-[0_5px_10px_5px_var(--borderHoverColor)] mt-8"
+                  className="h-[30vh] rounded-[12px] md:h-[24vh] md:w-[80%] [&>.ant-card-body]:overflow-hidden  [&>.ant-card-body]:w-full [&>.ant-card-body]:flex [&>.ant-card-body]:h-full [&>.ant-card-body]:p-0 w-[100%] m-[0_auto] flex  border-0 bg-[var(--background)]  shadow-box mt-8"
                 >
-                  <div className="w-1/2 h-full overflow-hidden rounded-lg">
+                  <div className="w-1/2 h-full overflow-hidden rounded-[12px_0_0_12px]">
                     <img
-                      src={i.img}
+                      src={i.article_cover === "" ? GgUrl : i.article_cover}
                       alt=""
-                      className="w-full h-full duration-500  ease-linear hover:scale-[1.2]"
+                      className="w-full h-full   duration-500  ease-linear hover:scale-[1.2]"
                     />
                   </div>
                   <div className="w-1/2 p-5">
                     <div className="text-sm font-bold text-[var(--text-color)] flex items-center">
                       <Icon icon="clarity:date-line" />
-                      <div className="ml-2">发布于：{i.time}</div>
+                      <div className="ml-2">发布于：{i.create_at}</div>
                     </div>
                     <div className="my-2 text-2xl font-bold text-[var(--text-color)]">
                       {i.title}
@@ -318,11 +380,11 @@ export default function HomeContainer() {
                     <div className="text-sm font-bold text-[var(--text-color)] flex items-center">
                       <div className="flex items-center">
                         <Icon icon="mdi:hot" className="text-[red] mr-1" />
-                        <div>{i.hot}</div>
+                        <div>{i.viewers}</div>
                       </div>
                       <div className="flex items-center mx-5">
                         <Icon icon="jam:write" className=" mr-1" />
-                        <div>{i.comment}</div>
+                        <div>{i.nickname}</div>
                       </div>
                       <div className="flex items-center">
                         <Icon icon="flat-color-icons:like" className=" mr-1" />
@@ -330,38 +392,37 @@ export default function HomeContainer() {
                       </div>
                     </div>
                     <div className="text-sm font-bold text-[var(--text-color)] truncate mt-2">
-                      {i.info}
+                      {i.article_summary}
                     </div>
                     <div className="text-sm font-bold  mt-2 flex  items-center">
-                      <div className="flex items-center  rounded-lg text-[var(--lightGreen)] border-dashed border  border-[var(--lightGray)] px-1">
-                        <Icon
-                          icon="solar:bookmark-opened-outline"
-                          className="text-[orange] mr-[8px]"
-                        />
-                        {i.plate}
-                      </div>
-                      <div className="flex items-center ml-6 rounded-lg text-[var(--lightGreen)] border-dashed border  border-[var(--lightGray)] px-1">
-                        <Icon
-                          icon="game-icons:feather"
-                          className="text-[var(--lightGreen)]  mr-2"
-                        />
-                        {i.stort}
-                      </div>
+                      {i.article_label.map((label: string) => {
+                        return (
+                          <div className="flex items-center  rounded-lg text-[var(--lightGreen)] border-dashed border  border-[var(--lightGray)] px-1">
+                            <Icon
+                              icon="solar:bookmark-opened-outline"
+                              className="text-[orange] mr-[8px]"
+                            />
+                            {label}
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 </Card>
               );
             })}
             <div className="w-full h-8 flex justify-center items-center my-6">
-              <Button
-                type="primary"
-                className="h-full w-[25%] flex justify-center  items-center text-[var(--text-color)] font-bold"
-                shape="round"
-                size="large"
-              >
-                <div>🎉 下一页 🎉</div>
-              </Button>
+              <Divider>到底啦 ~</Divider>
             </div>
+          </div>
+          <div className="w-full flex justify-center">
+            <Pagination
+              hideOnSinglePage={true}
+              pageSize={pageInfo.page_size}
+              current={pageInfo.page}
+              onChange={onChange}
+              total={pageInfo.count}
+            />
           </div>
         </div>
       </div>

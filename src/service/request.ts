@@ -1,4 +1,4 @@
-import { buildHeaders, dateToString } from "@/utils";
+import { buildHeaders, dateToString, removeToken } from "@/utils";
 import Notification from "@/components/Notification";
 import axios, {
   AxiosInstance,
@@ -52,8 +52,9 @@ request.interceptors.response.use(
   (response) => {
     const code = response.data.code;
 
-    if (code !== 200) {
+    if (code === 0) {
       Notification({ type: "error", msg: response.data.msg, time: 2.5 });
+      removeToken();
     }
     // 放行
     if (code === 200) {
@@ -70,6 +71,7 @@ request.interceptors.response.use(
         data: { message },
       },
     } = error;
+
     Notification({ type: "error", msg: message, time: 2.5 });
     return Promise.reject(error);
   }

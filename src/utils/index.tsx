@@ -13,6 +13,14 @@ interface ResponseResult<T = any> {
   data: T;
   msg: string;
 }
+interface ResponsePageInfoResult<T = any> {
+  data: T;
+  total: {
+    page: number;
+    page_size: number;
+    count: number;
+  };
+}
 
 export const ResponseCode = {
   SUCCESS: 200,
@@ -44,4 +52,4 @@ export {
   dateToString,
   buildHeaders,
 };
-export type { ResponseResult };
+export type { ResponseResult, ResponsePageInfoResult };

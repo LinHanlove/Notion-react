@@ -36,6 +36,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             labelColor: "#008080",
             itemMarginBottom: 18,
           },
+          Pagination: {
+            itemSize: 20,
+          },
         },
       }}
     >

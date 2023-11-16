@@ -1,20 +1,11 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import AutoImport from "unplugin-auto-import/vite";
 import { resolve } from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
-    // proxy: {
-    //   "/api": {
-    //     target: "http://127.0.0.1:8000",
-    //     changeOrigin: true,
-    //     rewrite: (path) => path.replace(/^\/api/, ""),
-    //     headers: {
-    //       "Access-Control-Request-Headers": "content-type",
-    //     },
-    //   },
-    // },
     open: true,
   },
   resolve: {
@@ -33,5 +24,12 @@ export default defineConfig({
     /*指定构建输出的目录 */
     manifest: true,
   },
-  plugins: [react()],
+  plugins: [
+    react(),
+    AutoImport({
+      imports: ["react", "react-router-dom", "ahooks"],
+      dirs: ["./src/assets"],
+      dts: "./src/auto-import.d.ts",
+    }),
+  ],
 });

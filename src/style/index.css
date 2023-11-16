@@ -1,4 +1,5 @@
 :root {
+  --header: 8vh;
   margin: 0;
   --SmileySans: SmileySans;
   --hang1: linear-gradient(0deg, #ddd, #fff);
@@ -14,7 +15,7 @@
   --musicWidth: 1000px;
   --home-left: 300px;
   --home-right: 300px;
-  --header: 8vh;
+
   --commentContent: #f7f9fe;
   --textBg: url(./assets/images/textBg);
   --homeBg: url(./assets/images/homeBg.jpg);
@@ -23,8 +24,10 @@
   --color-surface: 250 253 252;
   --color-primary: 0 106 106;
   --fontColor: white;
-  --borderColor: #4f4f4f;
-  --borderHoverColor: black;
+  --borderColor: rgba(0, 0, 0, 0.5);
+  /* 边框 */
+  --borderHoverColor: rgba(110, 110, 110, 0.4);
+
   --articleFontColor: #e4e4e4;
   --articleGreyFontColor: #d4d4d4;
   --commentContent: #d4d4d4;
@@ -37,12 +40,7 @@
     #23d5ab
   );
   --favoriteBg: #f7f9fe;
-  --fontColor: #000;
-  --borderColor: rgba(0, 0, 0, 0.5);
-  --borderHoverColor: hsla(0, 0%, 43.1%, 0.4);
-  --articleFontColor: #1f1f1f;
-  --articleGreyFontColor: #616161;
-  --commentContent: #f7f9fe;
+
   --themeBackground: orange;
   --gradualRed: linear-gradient(90deg, #ff4b2b, #ff416c);
   --toolbarFont: #333;
@@ -74,8 +72,6 @@
   --black: #000;
   --lightYellow: #f4e1c0;
   --fontColor: black;
-  --borderColor: rgba(0, 0, 0, 0.5);
-  --borderHoverColor: rgba(110, 110, 110, 0.4);
   --articleFontColor: #1f1f1f;
   --articleGreyFontColor: #616161;
   --commentContent: #f7f9fe;
@@ -126,4 +122,19 @@
 
 .alert-exit-done {
   display: none;
+}
+
+/* 阴影 */
+.shadow-box-mini {
+  box-shadow: 1px 1px 3px var(--mask);
+}
+
+.shadow-box {
+  border: none !important;
+  box-shadow: 0 1px 20px -6px var(--borderColor);
+  transition: all 0.3s ease;
+}
+
+.shadow-box:hover {
+  box-shadow: 0 5px 10px 5px var(--borderHoverColor);
 }
