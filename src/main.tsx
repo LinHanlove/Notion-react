@@ -39,6 +39,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           Pagination: {
             itemSize: 20,
           },
+          List: {
+            metaMarginBottom: 0,
+          },
         },
       }}
     >

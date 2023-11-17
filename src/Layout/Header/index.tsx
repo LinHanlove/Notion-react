@@ -19,6 +19,13 @@ const Header = forwardRef((props: { children?: any }, ref: any) => {
       },
     },
     {
+      hidden: true,
+      icon: "line-md:edit",
+      event: () => {
+        navigate("/take-notes");
+      },
+    },
+    {
       hidden: getToken() ? true : false,
       icon: "mdi:power",
       event: () => {

@@ -1,23 +1,65 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState } from "react";
 import { MdPreview, MdCatalog } from "md-editor-rt";
 import "md-editor-rt/lib/preview.css";
 import { Card, Avatar, Layout } from "antd";
 import { Content } from "antd/es/layout/layout";
 import Sider from "antd/es/layout/Sider";
+import * as article from "@/service/article";
+import { ResponseCode, getUserInfo } from "@/utils";
+
 export default () => {
   const url =
     "https://avatars.githubusercontent.com/u/119206123?s=400&u=c687a9a31da1b18e8b93313bca02766b9478bd50&v=4";
 
   const [id] = useState("preview-only");
 
-  // 获取本地存储
-  const test = localStorage.getItem("text")!;
-  const title = "linhan的第一篇笔记";
-  const info = `<div class='text-4xl mt-4 font-bold'>${title}</div> <div class='flex justify-between items-center mt-2 mb-10 w-[40%] flex-wrap text-sm font-medium'><div>linhan</div><div class='text-[#8a919f]'>2023-03-25</div><div>16</div></div>\n\n`;
+  const { state } = useLocation();
 
-  const [text] = useState(`${info}` + JSON.parse(test)[0]);
+  const user = JSON.parse(getUserInfo()!);
 
-  const [previewTheme] = useState(JSON.parse(test)[1]);
+  const [headerInfo, setHeaderInfo] = useState({
+    title: "",
+    create_at: "",
+    author_name: "",
+    viewers: "",
+  });
+  const [content, setContent] = useState({
+    article_content: "",
+    preview_theme: "",
+  });
+
+  const getArticle = async () => {
+    try {
+      const res = await article.getArticle({
+        article_id: state.id,
+      });
+      if (res.code === ResponseCode.SUCCESS) {
+        setHeaderInfo({
+          title: res.data.title,
+          create_at: res.data.create_at,
+          author_name: res.data.author_name,
+          viewers: res.data.viewers.toString(),
+        });
+        setContent({
+          article_content: res.data.article_content,
+          preview_theme: res.data.preview_theme,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const info = `<div class='text-4xl mt-4 font-bold'>${headerInfo.title}</div> 
+  <div class='flex justify-between items-center mt-2 mb-10 w-[40%] flex-wrap text-sm font-medium'>
+  <div>${headerInfo.author_name}</div>
+  <div class='text-[#8a919f]'>${headerInfo.create_at}</div>
+  <div>${headerInfo.viewers}</div></div>\n\n`;
+
+  useEffect(() => {
+    void getArticle();
+  }, []);
 
   return (
     <Layout className="h-full w-full ">
@@ -28,18 +70,18 @@ export default () => {
         <Content className="md:w-[68%] preview md:mr-5 w-full overflow-y-scroll [&::-webkit-scrollbar]:hidden  ">
           <MdPreview
             editorId={id}
-            modelValue={text}
-            previewTheme={previewTheme}
+            modelValue={`${info}${content.article_content}`}
+            previewTheme={content.preview_theme}
             className=" min-h-[100vh]"
           />
         </Content>
         <Sider className="md:block max-h-[70vh] pt-10 bg-[#f2f3f5] min-w-[30%] hidden">
           <Card className="w-full h-[30%] border-0  [&>.ant-card-body]:w-full [&>.ant-card-body]:h-full [&>.ant-card-body]:p-2">
-            <div className=" w-[80%] m-[0_auto]  flex  items-center">
+            <div className=" w-full m-[0_auto]  flex  items-center">
               <Avatar className="hover:animate-spin w-16 h-16" src={url} />
-              <div className="text-xl font-bold ml-4 text-center text-[var(--text-color)]">
-                <div> Notion</div>
-                <div className="text-sm"> 前端菜鸡</div>
+              <div className="text-xl w-[calc(100%-64px)] font-bold ml-4 text-center text-[var(--text-color)]">
+                <div className="text-3xl"> {user.username}</div>
+                <div className="text-sm mt-2 text-[teal]"> {user.motto}</div>
               </div>
             </div>
 
@@ -47,7 +89,7 @@ export default () => {
               <div className="flex justify-between items-center w-[80%] m-[0_auto] ">
                 <div className="flex justify-center flex-col items-center">
                   <div>文章</div>
-                  <div>140</div>
+                  <div>{user.personal_articles_count}</div>
                 </div>
                 <div className="flex justify-center flex-col items-center">
                   <div>分类</div>

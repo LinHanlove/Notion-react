@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { TransitionDown, TransitionUp } from "@/components/Transition";
-import { ClockCircleOutlined } from "@ant-design/icons";
-import { Button, Timeline } from "antd";
+import { Avatar, Divider, List, Skeleton } from "antd";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { Icon } from "@iconify/react";
 import { useNavigate } from "react-router-dom";
 import * as article from "@/service/article";
@@ -10,24 +10,50 @@ import { ResponseCode, getUserInfo } from "@/utils";
 
 export default function Notebook() {
   const navigate = useNavigate();
-  const user = JSON.parse(getUserInfo()!);
-  // 写笔记
-  const handleMdEditor = () => {
-    navigate("/take-notes");
-  };
 
-  const handleMdPreview = () => {
-    navigate("/preview-notes");
-  };
+  const user = JSON.parse(getUserInfo()!);
+
+  const [loading, setLoading] = useState(false);
+
+  const [status, setStatus] = useState(false);
+
+  const [articleList, setArticleList] = useState<any[]>([]);
+
+  const [pageInfo, setPageInfo] = useState({
+    page: 1,
+    page_size: 10,
+    count: 0,
+  });
 
   const getUserArticleList = async () => {
     try {
+      console.log(loading);
+      if (loading) return;
+      setLoading(true);
       const res = await article.getUserArticleList({
         author_id: user.id,
+        page: pageInfo.page,
+        page_size: pageInfo.page_size,
       });
-      if (res.code === ResponseCode.SUCCESS) console.log(res.data);
+      if (res.code === ResponseCode.SUCCESS) {
+        setArticleList([...articleList, ...res.data.data]);
+        setPageInfo({
+          ...pageInfo,
+          page: pageInfo.page + 1,
+          count: res.data.total.count,
+        });
+        articleList.length === res.data.total.count
+          ? setStatus(true)
+          : setStatus(false);
+        setLoading(false);
+      } else {
+        setPageInfo({
+          ...pageInfo,
+          page: pageInfo.page,
+        });
+      }
     } catch (error) {
-      console.log(error);
+      setLoading(false);
     }
   };
 
@@ -36,7 +62,7 @@ export default function Notebook() {
   }, []);
 
   return (
-    <div>
+    <div id="scrollableDiv" className="h-[100vh] overflow-y-auto">
       <TransitionDown>
         <div className="h-[30vh] bg-[teal] text-center text-[var(--text-color)]">
           <div className="leading-[30vh] text-[20px] font-bold">
@@ -45,69 +71,91 @@ export default function Notebook() {
         </div>
       </TransitionDown>
       <TransitionUp>
-        <div className="h-[100vh] bg-[--background]">
-          <div className="w-full h-10 flex justify-end mb-8">
-            <Button
-              type="primary"
-              className="w-40 h-8 mr-6 mt-6 flex justify-center items-center text-[var(--text-color)] font-bold"
-              shape="round"
-              size="large"
-              onClick={handleMdEditor}
-            >
-              <Icon
-                icon="game-icons:scroll-quill"
-                className="text-[2rem] mr-2"
-              />
-              <div>写文章</div>
-            </Button>
-          </div>
-          <Timeline
-            mode="alternate"
-            items={[
-              {
-                children: (
-                  <div onClick={handleMdPreview} className="w-[200px] h-[60px]">
-                    点击预览文章
-                  </div>
-                ),
-              },
-              {
-                children: (
-                  <div onClick={handleMdPreview} className="h-[60px] ">
-                    点击预览文章
-                  </div>
-                ),
-                color: "green",
-              },
-              {
-                dot: <ClockCircleOutlined style={{ fontSize: "16px" }} />,
-                children: `Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.`,
-              },
-              {
-                color: "red",
-                children: (
-                  <div onClick={handleMdPreview} className="h-[60px] ">
-                    点击预览文章
-                  </div>
-                ),
-              },
-              {
-                children: (
-                  <div onClick={handleMdPreview} className="h-[60px] ">
-                    点击预览文章
-                  </div>
-                ),
-              },
-              {
-                dot: <ClockCircleOutlined style={{ fontSize: "16px" }} />,
-                children: (
-                  <div onClick={handleMdPreview} className="h-[60px] ">
-                    点击预览文章
-                  </div>
-                ),
-              },
-            ]}
-          />
+        <div className="h-auto bg-[--background] flex justify-center ">
+          <InfiniteScroll
+            className="md:w-[50vw] w-[90vw] h-full "
+            dataLength={articleList.length}
+            next={getUserArticleList}
+            hasMore={!status}
+            loader={<Skeleton avatar paragraph={{ rows: 2 }} active />}
+            endMessage={<Divider plain>这是全部了！没有更多了~~~ 🤐</Divider>}
+            scrollableTarget="scrollableDiv"
+          >
+            <List
+              itemLayout="vertical"
+              dataSource={articleList}
+              renderItem={(item) => (
+                <List.Item
+                  onClick={() => {
+                    navigate("/preview-notes", {
+                      state: { id: item.article_id },
+                    });
+                  }}
+                  key={item.article_id}
+                  extra={
+                    <img
+                      width={120}
+                      alt="logo"
+                      src={
+                        item.article_cover !== ""
+                          ? item.article_cover
+                          : "https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
+                      }
+                    />
+                  }
+                  className="w-full   pb-2"
+                >
+                  <List.Item.Meta
+                    className=" h-full overflow-hidden"
+                    avatar={<Avatar src={item.avatar} />}
+                    title={<div>{item.title}</div>}
+                    description={
+                      <div className="h-30">
+                        <div className="h-10 overflow-hidden">
+                          {item.article_summary}
+                        </div>
+                        <div className="w-full h-8 flex justify-between items-center flex-wrap ">
+                          <div className="w-1/2 flex items-center invisible sm:visible">
+                            <div className="flex items-center">
+                              <Icon
+                                icon="mdi:hot"
+                                className="text-[red] mr-1"
+                              />
+                              <div>{item.viewers}</div>
+                            </div>
+                            <div className="flex items-center mx-5">
+                              <Icon icon="jam:write" className=" mr-1" />
+                              <div>{item.nickname}</div>
+                            </div>
+                            <div className="flex items-center">
+                              <Icon
+                                icon="flat-color-icons:like"
+                                className=" mr-1"
+                              />
+                              <div>{item.like}</div>
+                            </div>
+                          </div>
+                          <div className="w-1/2 flex justify-end items-center invisible sm:visible">
+                            {item.article_label.map((label: string) => {
+                              return (
+                                <div className="flex h-full items-center mx-1 truncate rounded-lg text-[var(--lightGreen)] border-dashed border  border-[var(--lightGreen)] px-1">
+                                  <Icon
+                                    icon="solar:bookmark-opened-outline"
+                                    className="text-[orange] mr-1"
+                                  />
+                                  {label}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </div>
+                    }
+                  />
+                </List.Item>
+              )}
+            />
+          </InfiniteScroll>
         </div>
       </TransitionUp>
     </div>

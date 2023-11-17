@@ -6,8 +6,8 @@ import {
   Input,
   Image,
   Divider,
-  Pagination,
-  PaginationProps,
+  List,
+  Skeleton,
 } from "antd";
 import { Icon } from "@iconify/react";
 import { useScrollable } from "@/hooks/useScrollable";
@@ -17,6 +17,8 @@ import * as article from "@/service/article";
 import * as user from "@/service/user";
 import { ResponseCode, getUserInfo, optional, setUserInfo } from "@/utils";
 import { IGetUserInfoResult } from "@/service/user";
+
+import InfiniteScroll from "react-infinite-scroll-component";
 import { IGetSearchArticleListRes } from "@/service/article";
 
 export default function HomeContainer() {
@@ -51,26 +53,48 @@ export default function HomeContainer() {
 
   const [recommend, setRecommend] = useState<IGetSearchArticleListRes[]>([]);
 
+  const [loading, setLoading] = useState(false);
+
+  const [status, setStatus] = useState(false);
+
+  const [pageInfo, setPageInfo] = useState({
+    page: 1,
+    page_size: 5,
+    count: 0,
+  });
+
   /** 搜索 */
   const handleSearch = async () => {
+    console.log(loading);
+    if (loading) return;
+    setLoading(true);
     const res = await article.getSearchArticleList({
       search: optional(search),
       page: pageInfo.page,
       page_size: pageInfo.page_size,
     });
     if (res.code === ResponseCode.SUCCESS) {
-      setSearch("");
-      setResData(res.data.data);
+      setResData([...resData, ...res.data.data]);
       setPageInfo({
         ...pageInfo,
+        page: pageInfo.page + 1,
         count: res.data.total.count,
+      });
+      resData.length === res.data.total.count
+        ? setStatus(true)
+        : setStatus(false);
+      setLoading(false);
+    } else {
+      setPageInfo({
+        ...pageInfo,
+        page: pageInfo.page,
       });
     }
   };
   /** 获取推荐列表 */
-  const getRecommendArticleList = async () => {
+  const getRecommendResData = async () => {
     try {
-      const res = await article.getRecommendArticleList({
+      const res = await article.getRecommendResData({
         search: optional(search),
         page: pageInfo.page,
         page_size: 2,
@@ -83,26 +107,10 @@ export default function HomeContainer() {
     }
   };
 
-  const [pageInfo, setPageInfo] = useState({
-    page: 1,
-    page_size: 10,
-    count: 0,
-  });
-
-  const onChange: PaginationProps["onChange"] = (pageNum) => {
-    setPageInfo({
-      ...pageInfo,
-      page: pageNum,
-    });
-  };
-  useEffect(() => {
-    void handleSearch();
-  }, [pageInfo.page]);
-
   useEffect(() => {
     void getUserinfo();
     void handleSearch();
-    void getRecommendArticleList();
+    void getRecommendResData();
   }, []);
 
   return (
@@ -284,13 +292,15 @@ export default function HomeContainer() {
             </div>
             <div className="text-[1rem] font-bold text-[var(--greyFont)] md:w-[80%] w-[100%] ">
               <div className="my-2  w-full break-words  h-auto">
-                git仓库 :
-                <NavLink
+                git仓库 :{" "}
+                <span
+                  onClick={() => {
+                    window.open("https://gitee.com/linhanlove/notion");
+                  }}
                   className="text-[teal]"
-                  to="https://gitee.com/linhanlove/notion"
                 >
                   https://gitee.com/linhanlove/notion
-                </NavLink>
+                </span>
               </div>
               <div className="my-2">其他通知...</div>
             </div>
@@ -303,126 +313,152 @@ export default function HomeContainer() {
             </div>
           </div>
           {/* 模块列表 */}
-          <div>
-            {resData?.map((i, inx) => {
-              return inx % 2 == 0 ? (
-                <Card
-                  key={i.article_id}
-                  className="h-[30vh] [&>.ant-card-body]:overflow-hidden  [&>.ant-card-body]:w-full [&>.ant-card-body]:flex [&>.ant-card-body]:h-full [&>.ant-card-body]:p-0  md:h-[24vh] md:w-[80%] w-[100%] m-[0_auto] flex  rounded-[12px] border-0 bg-[var(--background)]  shadow-box mt-8"
-                >
-                  <div className="w-1/2 p-5">
-                    <div className="text-sm font-bold text-[var(--text-color)] flex items-center">
-                      <Icon icon="clarity:date-line" />
-                      <div className="ml-2">发布于：{i.create_at}</div>
-                    </div>
-                    <div className="my-2 text-2xl font-bold text-[var(--text-color)]">
-                      {i.title}
-                    </div>
-                    <div className="text-sm font-bold text-[var(--text-color)] flex items-center">
-                      <div className="flex items-center">
-                        <Icon icon="mdi:hot" className="text-[red] mr-1" />
-                        <div>{i.viewers}</div>
-                      </div>
-                      <div className="flex items-center mx-5">
-                        <Icon icon="jam:write" className=" mr-1" />
-                        <div>{i.comment}</div>
-                      </div>
-                      <div className="flex items-center">
-                        <Icon icon="flat-color-icons:like" className=" mr-1" />
-                        <div>{i.like}</div>
-                      </div>
-                    </div>
-                    <div className="text-sm font-bold text-[var(--text-color)] truncate mt-2">
-                      {i.article_summary}
-                    </div>
-                    <div className="text-sm font-bold  mt-2 flex  items-center">
-                      {i.article_label.map((label: string) => {
-                        return (
-                          <div className="flex items-center  rounded-lg text-[var(--lightGreen)] border-dashed border  border-[var(--lightGray)] px-1">
-                            <Icon
-                              icon="solar:bookmark-opened-outline"
-                              className="text-[orange] mr-[8px]"
-                            />
-                            {label}
+          <div className="h-auto bg-[--background] flex justify-center ">
+            <InfiniteScroll
+              className="md:w-[50vw] w-[90vw] h-full "
+              dataLength={resData.length}
+              next={handleSearch}
+              hasMore={!status}
+              loader={<Skeleton avatar paragraph={{ rows: 2 }} active />}
+              endMessage={<Divider plain>这是全部了！没有更多了~~~ 🤐</Divider>}
+              scrollableTarget="scrollDom"
+            >
+              <List
+                split={false}
+                dataSource={resData}
+                renderItem={(item, inx) => {
+                  return inx % 2 === 0 ? (
+                    <List.Item>
+                      <Card
+                        key={item.article_id}
+                        className="h-[30vh] [&>.ant-card-body]:overflow-hidden  [&>.ant-card-body]:w-full [&>.ant-card-body]:flex [&>.ant-card-body]:h-full [&>.ant-card-body]:p-0  md:h-[24vh] md:w-[80%] w-[100%] m-[0_auto] flex  rounded-[12px] border-0 bg-[var(--background)]  shadow-box mt-8"
+                      >
+                        <div className="w-1/2 p-5">
+                          <div className="text-sm font-bold text-[var(--text-color)] flex items-center">
+                            <Icon icon="clarity:date-line" />
+                            <div className="ml-2">发布于：{item.create_at}</div>
                           </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                  <div className="w-1/2 h-full overflow-hidden rounded-[0_12px_12px_0]">
-                    <img
-                      src={i.article_cover === "" ? GgUrl : i.article_cover}
-                      alt=""
-                      className="w-full h-full   duration-500  ease-linear hover:scale-[1.2]"
-                    />
-                  </div>
-                </Card>
-              ) : (
-                <Card
-                  key={inx}
-                  className="h-[30vh] rounded-[12px] md:h-[24vh] md:w-[80%] [&>.ant-card-body]:overflow-hidden  [&>.ant-card-body]:w-full [&>.ant-card-body]:flex [&>.ant-card-body]:h-full [&>.ant-card-body]:p-0 w-[100%] m-[0_auto] flex  border-0 bg-[var(--background)]  shadow-box mt-8"
-                >
-                  <div className="w-1/2 h-full overflow-hidden rounded-[12px_0_0_12px]">
-                    <img
-                      src={i.article_cover === "" ? GgUrl : i.article_cover}
-                      alt=""
-                      className="w-full h-full   duration-500  ease-linear hover:scale-[1.2]"
-                    />
-                  </div>
-                  <div className="w-1/2 p-5">
-                    <div className="text-sm font-bold text-[var(--text-color)] flex items-center">
-                      <Icon icon="clarity:date-line" />
-                      <div className="ml-2">发布于：{i.create_at}</div>
-                    </div>
-                    <div className="my-2 text-2xl font-bold text-[var(--text-color)]">
-                      {i.title}
-                    </div>
-                    <div className="text-sm font-bold text-[var(--text-color)] flex items-center">
-                      <div className="flex items-center">
-                        <Icon icon="mdi:hot" className="text-[red] mr-1" />
-                        <div>{i.viewers}</div>
-                      </div>
-                      <div className="flex items-center mx-5">
-                        <Icon icon="jam:write" className=" mr-1" />
-                        <div>{i.nickname}</div>
-                      </div>
-                      <div className="flex items-center">
-                        <Icon icon="flat-color-icons:like" className=" mr-1" />
-                        <div>{i.like}</div>
-                      </div>
-                    </div>
-                    <div className="text-sm font-bold text-[var(--text-color)] truncate mt-2">
-                      {i.article_summary}
-                    </div>
-                    <div className="text-sm font-bold  mt-2 flex  items-center">
-                      {i.article_label.map((label: string) => {
-                        return (
-                          <div className="flex items-center  rounded-lg text-[var(--lightGreen)] border-dashed border  border-[var(--lightGray)] px-1">
-                            <Icon
-                              icon="solar:bookmark-opened-outline"
-                              className="text-[orange] mr-[8px]"
-                            />
-                            {label}
+                          <div className="my-2 text-2xl font-bold text-[var(--text-color)]">
+                            {item.title}
                           </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </Card>
-              );
-            })}
-            <div className="w-full h-8 flex justify-center items-center my-6">
-              <Divider>到底啦 ~</Divider>
-            </div>
-          </div>
-          <div className="w-full flex justify-center">
-            <Pagination
-              hideOnSinglePage={true}
-              pageSize={pageInfo.page_size}
-              current={pageInfo.page}
-              onChange={onChange}
-              total={pageInfo.count}
-            />
+                          <div className="text-sm font-bold text-[var(--text-color)] flex items-center">
+                            <div className="flex items-center">
+                              <Icon
+                                icon="mdi:hot"
+                                className="text-[red] mr-1"
+                              />
+                              <div>{item.viewers}</div>
+                            </div>
+                            <div className="flex items-center mx-5">
+                              <Icon icon="jam:write" className=" mr-1" />
+                              <div>{item.author_name}</div>
+                            </div>
+                            <div className="flex items-center">
+                              <Icon
+                                icon="flat-color-icons:like"
+                                className=" mr-1"
+                              />
+                              <div>{item.like}</div>
+                            </div>
+                          </div>
+                          <div className="text-sm font-bold text-[var(--text-color)] truncate mt-2">
+                            {item.article_summary}
+                          </div>
+                          <div className="text-sm font-bold  mt-2 flex  items-center">
+                            {item.article_label.map((label: string) => {
+                              return (
+                                <div className="flex items-center  rounded-lg text-[var(--lightGreen)] border-dashed border  border-[var(--lightGray)] px-1">
+                                  <Icon
+                                    icon="solar:bookmark-opened-outline"
+                                    className="text-[orange] mr-[8px]"
+                                  />
+                                  {label}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                        <div className="w-1/2 h-full overflow-hidden rounded-[0_12px_12px_0]">
+                          <img
+                            src={
+                              item.article_cover === ""
+                                ? GgUrl
+                                : item.article_cover
+                            }
+                            alt=""
+                            className="w-full h-full   duration-500  ease-linear hover:scale-[1.2]"
+                          />
+                        </div>
+                      </Card>
+                    </List.Item>
+                  ) : (
+                    <List.Item>
+                      <Card
+                        key={item.article_id}
+                        className="h-[30vh] rounded-[12px] md:h-[24vh] md:w-[80%] [&>.ant-card-body]:overflow-hidden  [&>.ant-card-body]:w-full [&>.ant-card-body]:flex [&>.ant-card-body]:h-full [&>.ant-card-body]:p-0 w-[100%] m-[0_auto] flex  border-0 bg-[var(--background)]  shadow-box mt-8"
+                      >
+                        <div className="w-1/2 h-full overflow-hidden rounded-[12px_0_0_12px]">
+                          <img
+                            src={
+                              item.article_cover === ""
+                                ? GgUrl
+                                : item.article_cover
+                            }
+                            alt=""
+                            className="w-full h-full   duration-500  ease-linear hover:scale-[1.2]"
+                          />
+                        </div>
+                        <div className="w-1/2 p-5">
+                          <div className="text-sm font-bold text-[var(--text-color)] flex items-center">
+                            <Icon icon="clarity:date-line" />
+                            <div className="ml-2">发布于：{item.create_at}</div>
+                          </div>
+                          <div className="my-2 text-2xl font-bold text-[var(--text-color)]">
+                            {item.title}
+                          </div>
+                          <div className="text-sm font-bold text-[var(--text-color)] flex items-center">
+                            <div className="flex items-center">
+                              <Icon
+                                icon="mdi:hot"
+                                className="text-[red] mr-1"
+                              />
+                              <div>{item.viewers}</div>
+                            </div>
+                            <div className="flex items-center mx-5">
+                              <Icon icon="jam:write" className=" mr-1" />
+                              <div>{item.nickname}</div>
+                            </div>
+                            <div className="flex items-center">
+                              <Icon
+                                icon="flat-color-icons:like"
+                                className=" mr-1"
+                              />
+                              <div>{item.like}</div>
+                            </div>
+                          </div>
+                          <div className="text-sm font-bold text-[var(--text-color)] truncate mt-2">
+                            {item.article_summary}
+                          </div>
+                          <div className="text-sm font-bold  mt-2 flex  items-center">
+                            {item.article_label.map((label: string) => {
+                              return (
+                                <div className="flex items-center  rounded-lg text-[var(--lightGreen)] border-dashed border  border-[var(--lightGray)] px-1">
+                                  <Icon
+                                    icon="solar:bookmark-opened-outline"
+                                    className="text-[orange] mr-[8px]"
+                                  />
+                                  {label}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </Card>
+                    </List.Item>
+                  );
+                }}
+              />
+            </InfiniteScroll>
           </div>
         </div>
       </div>

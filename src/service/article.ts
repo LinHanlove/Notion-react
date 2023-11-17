@@ -51,6 +51,18 @@ export const getUserArticleList = (data: IUserArticleListParams) => {
   });
 };
 
+/** 查看文章 */
+interface IGetArticleParams {
+  article_id: number;
+}
+export const getArticle = (data: IGetArticleParams) => {
+  return axios.request<ResponseResult<IGetSearchArticleListRes>>({
+    url: "/api/article/get/article",
+    method: "get",
+    params: data,
+  });
+};
+
 interface getSearchArticleList {
   search?: string;
   page?: number;
