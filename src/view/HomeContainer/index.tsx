@@ -65,7 +65,6 @@ export default function HomeContainer() {
 
   /** 搜索 */
   const handleSearch = async () => {
-    console.log(loading);
     if (loading) return;
     setLoading(true);
     const res = await article.getSearchArticleList({
@@ -94,7 +93,7 @@ export default function HomeContainer() {
   /** 获取推荐列表 */
   const getRecommendResData = async () => {
     try {
-      const res = await article.getRecommendResData({
+      const res = await article.getRecommendArticleList({
         search: optional(search),
         page: pageInfo.page,
         page_size: 2,

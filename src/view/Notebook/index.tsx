@@ -106,11 +106,11 @@ export default function Notebook() {
                   className="w-full   pb-2"
                 >
                   <List.Item.Meta
-                    className=" h-full overflow-hidden"
+                    className=" h-full overflow-hidden text-[var(--lightGreen)]"
                     avatar={<Avatar src={item.avatar} />}
-                    title={<div>{item.title}</div>}
+                    title={<div className="text-[teal]">{item.title}</div>}
                     description={
-                      <div className="h-30">
+                      <div className="h-30 text-[var(--text-color)]">
                         <div className="h-10 overflow-hidden">
                           {item.article_summary}
                         </div>

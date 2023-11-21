@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Icon } from "@iconify/react";
-import { Button, Input, message } from "antd";
+import { Button, Input, Pagination, PaginationProps, message } from "antd";
 import { SetStateAction, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import NoteItem from "@/view/NoteItem";
@@ -10,7 +10,7 @@ import Notification from "@/components/Notification";
 import { motion } from "framer-motion";
 import * as barrage from "@/service/barrage";
 import { ResponseCode, getUserInfo } from "@/utils";
-import { IBarrageListRes } from "@/service/barrage";
+import { IBarrageListRes, IMessageListRes } from "@/service/barrage";
 import homeBg from "@/assets/images/homeBg.jpg";
 
 const Barrage_warp = styled.div`
@@ -25,6 +25,8 @@ export default function TreeHole() {
 
   const [inputValue, setInputValue] = useState(""); // 定义状态变量
 
+  const [inputTextArea, setInputTextArea] = useState("");
+
   const { TextArea } = Input;
 
   const [messageApi, contextHolder] = message.useMessage();
@@ -32,6 +34,20 @@ export default function TreeHole() {
   const user = JSON.parse(getUserInfo()!);
 
   const [barrageList, setBarrageList] = useState<IBarrageListRes[]>([]);
+
+  const [messageTree, setMessageTree] = useState<IMessageListRes[]>([]);
+
+  const [barragePageInfo, setBarragePageInfo] = useState({
+    page: 1,
+    page_size: 200,
+    count: 0,
+  });
+
+  const [messagePageInfo, setMessagePageInfo] = useState({
+    page: 1,
+    page_size: 10,
+    count: 0,
+  });
 
   useEffect(() => {
     const barrageContainer = barrageRef.current;
@@ -81,7 +97,12 @@ export default function TreeHole() {
 
         index++;
         if (index === barrageList.length) {
-          index = 0; // 重新从第一个弹幕开始播放
+          // index = 0; // 重新从第一个弹幕开始播放
+          setBarragePageInfo({
+            ...barragePageInfo,
+            page: barragePageInfo.page + 1,
+          });
+          void getBarrageList();
         }
       }, 300);
 
@@ -95,11 +116,15 @@ export default function TreeHole() {
   const getBarrageList = async () => {
     try {
       const res = await barrage.getBarrageList({
-        page: 1,
-        page_size: 200,
+        page: barragePageInfo.page,
+        page_size: barragePageInfo.page_size,
       });
       if (res.code === ResponseCode.SUCCESS) {
         setBarrageList(res.data.data);
+        setBarragePageInfo({
+          ...barragePageInfo,
+          count: res.data.total.count,
+        });
       }
     } catch (error) {
       console.log(error);
@@ -146,7 +171,59 @@ export default function TreeHole() {
       console.log(error);
     }
   };
+
+  // 发布留言
+  const handleAddMessage = async () => {
+    try {
+      const res = await barrage.addMessage({
+        user_id: user.id,
+        parent_id: 0,
+        username: user.username,
+        avatar: user.avatar,
+        content: inputTextArea,
+      });
+      if (res.code === ResponseCode.SUCCESS) {
+        setInputTextArea("");
+        void getMessageList();
+        Notification({ type: "success", msg: res.msg, time: 2.5 });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // 获取留言
+  const getMessageList = async () => {
+    try {
+      const res = await barrage.getMessageList({
+        page: messagePageInfo.page,
+        page_size: messagePageInfo.page_size,
+      });
+      if (res.code === ResponseCode.SUCCESS) {
+        setMessageTree(res.data.data);
+        setMessagePageInfo({
+          ...messagePageInfo,
+          count: res.data.total.count,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleChangePagination: PaginationProps["onChange"] = (page) => {
+    setMessagePageInfo({
+      ...messagePageInfo,
+      page: page,
+    });
+  };
+
   useEffect(() => {
+    void getMessageList();
+  }, [messagePageInfo.page]);
+
+  useEffect(() => {
+    void getMessageList();
     void getBarrageList();
   }, []);
 
@@ -195,7 +272,7 @@ export default function TreeHole() {
           </div>
         </TransitionDown>
         <TransitionUp>
-          <div className="h-auto w-full flex justify-center pb-10">
+          <div className="h-auto w-full flex justify-center">
             <div className="md:w-[50%] w-[90%]  h-auto  ">
               <div className="flex items-center my-5 SmileySans">
                 <Icon
@@ -210,6 +287,10 @@ export default function TreeHole() {
                 <TextArea
                   className="[&>textarea]:text-[teal] [&>textarea]:font-semibold"
                   rows={6}
+                  value={inputTextArea}
+                  onChange={(e: {
+                    target: { value: SetStateAction<string> };
+                  }) => setInputTextArea(e.target.value)}
                   placeholder="咦~ 总想说点什么..."
                   allowClear
                   showCount
@@ -223,6 +304,7 @@ export default function TreeHole() {
                     className=" md:w-40 w-[50%] md:h-8 h-6 m-[12px_0] flex justify-center items-center text-[var(--text-color)] font-bold"
                     shape="round"
                     size="large"
+                    onClick={handleAddMessage}
                   >
                     <Icon
                       className="w-6 h-6 mr-2 text-[--text-color] scale-an"
@@ -237,14 +319,22 @@ export default function TreeHole() {
                   <div> 🎉Comments</div>
                   <div className="mx-2"> |</div>
                   <div>
-                    <span>45</span>条留言 🎉
+                    <span>{messageTree.length}</span>条留言 🎉
                   </div>
                 </div>
-                <NoteItem />
-                <NoteItem />
-                <NoteItem />
+                <NoteItem
+                  TreeData={messageTree}
+                  success={() => getMessageList()}
+                />
               </div>
             </div>
+          </div>
+          <div className="w-full flex justify-center pb-10">
+            <Pagination
+              onChange={handleChangePagination}
+              current={messagePageInfo.page}
+              total={messagePageInfo?.count}
+            />
           </div>
         </TransitionUp>
       </div>
