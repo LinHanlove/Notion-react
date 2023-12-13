@@ -1,6 +1,5 @@
 import {
   IndexRouteObject,
-  Navigate,
   NonIndexRouteObject,
   createBrowserRouter,
 } from "react-router-dom";
@@ -57,7 +56,6 @@ export const routes: _RouteObject[] = [
     ),
 
     children: [
-      { path: "", element: <Navigate to={"home"} /> },
       {
         path: "home",
         name: "首页",
@@ -100,7 +98,7 @@ export const routes: _RouteObject[] = [
       },
 
       {
-        path: "/user",
+        path: "user",
         element: (
           <Suspense fallback={<Loaders />}>
             <User />
@@ -108,7 +106,7 @@ export const routes: _RouteObject[] = [
         ),
       },
       {
-        path: "/personal-enter",
+        path: "personal-enter",
         element: (
           <Suspense fallback={<Loaders />}>
             <PersonalCenter />

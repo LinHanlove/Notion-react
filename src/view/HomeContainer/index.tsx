@@ -27,6 +27,8 @@ export default function HomeContainer() {
   const url =
     "https://avatars.githubusercontent.com/u/119206123?s=400&u=c687a9a31da1b18e8b93313bca02766b9478bd50&v=4";
 
+  const navigate = useNavigate();
+
   const userInfo = JSON.parse(getUserInfo()!);
 
   const [info, setInfo] = useState<IGetUserInfoResult>();
@@ -65,7 +67,7 @@ export default function HomeContainer() {
 
   /** 搜索 */
   const handleSearch = async () => {
-    if (loading) return;
+    if (loading || status) return;
     setLoading(true);
     const res = await article.getSearchArticleList({
       search: optional(search),
@@ -79,9 +81,9 @@ export default function HomeContainer() {
         page: pageInfo.page + 1,
         count: res.data.total.count,
       });
-      resData.length === res.data.total.count
-        ? setStatus(true)
-        : setStatus(false);
+
+      throttleValve(res.data.total.count);
+
       setLoading(false);
     } else {
       setPageInfo({
@@ -90,6 +92,23 @@ export default function HomeContainer() {
       });
     }
   };
+
+  // 节流阀
+  const throttleValve = (count: number) => {
+    return pageInfo.page * pageInfo.page_size >= count
+      ? setStatus(true)
+      : setStatus(false);
+  };
+
+  // 搜索重置pageInfo
+  useEffect(() => {
+    setPageInfo({
+      ...pageInfo,
+      page: 1,
+    });
+    setResData([]);
+  }, [search]);
+
   /** 获取推荐列表 */
   const getRecommendResData = async () => {
     try {
@@ -114,9 +133,9 @@ export default function HomeContainer() {
 
   return (
     <div className="h-auto w-full  bg-[--background] SmileySans flex justify-center py-5">
-      <div className="md:w-[70vw] w-[90%] flex flex-wrap">
+      <div className="md:w-[70vw] w-[90%] flex flex-wrap justify-center">
         {/* 左 */}
-        <div className="h-auto md:w-[30%] w-full ">
+        <div className="h-auto md:w-[30%] w-full sticky top-[10vh]">
           {/* 个人介绍 */}
           <Card className="md:md:w-[80%] bg-[--background] text-[--text-color]  w-[100%] h-auto m-[0_auto] group overflow-hidden   [&>.ant-card-body]:w-full [&>.ant-card-body]:h-full [&>.ant-card-body]:p-2  rounded-xl duration-500  ease-linear shadow-box">
             <div className="w-full h-[12vh] relative flex items-center justify-center">
@@ -201,7 +220,15 @@ export default function HomeContainer() {
             <div className="mt-4">
               {recommend?.map((i) => {
                 return (
-                  <div className="w-full  h-[10vh] my-2" key={i.article_id}>
+                  <div
+                    className="w-full  h-[10vh] my-2"
+                    key={i.article_id}
+                    onClick={() => {
+                      navigate("/preview-notes", {
+                        state: { id: i.article_id },
+                      });
+                    }}
+                  >
                     <div className="w-full h-[8vh] flex ">
                       <div className="w-2/5 rounded-lg h-full overflow-hidden">
                         <Image
@@ -327,7 +354,13 @@ export default function HomeContainer() {
                 dataSource={resData}
                 renderItem={(item, inx) => {
                   return inx % 2 === 0 ? (
-                    <List.Item>
+                    <List.Item
+                      onClick={() => {
+                        navigate("/preview-notes", {
+                          state: { id: item.article_id },
+                        });
+                      }}
+                    >
                       <Card
                         key={item.article_id}
                         className="h-[30vh] [&>.ant-card-body]:overflow-hidden  [&>.ant-card-body]:w-full [&>.ant-card-body]:flex [&>.ant-card-body]:h-full [&>.ant-card-body]:p-0  md:h-[24vh] md:w-[80%] w-[100%] m-[0_auto] flex  rounded-[12px] border-0 bg-[var(--background)]  shadow-box mt-8"
@@ -391,7 +424,13 @@ export default function HomeContainer() {
                       </Card>
                     </List.Item>
                   ) : (
-                    <List.Item>
+                    <List.Item
+                      onClick={() => {
+                        navigate("/preview-notes", {
+                          state: { id: item.article_id },
+                        });
+                      }}
+                    >
                       <Card
                         key={item.article_id}
                         className="h-[30vh] rounded-[12px] md:h-[24vh] md:w-[80%] [&>.ant-card-body]:overflow-hidden  [&>.ant-card-body]:w-full [&>.ant-card-body]:flex [&>.ant-card-body]:h-full [&>.ant-card-body]:p-0 w-[100%] m-[0_auto] flex  border-0 bg-[var(--background)]  shadow-box mt-8"

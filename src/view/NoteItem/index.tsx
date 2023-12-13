@@ -78,6 +78,7 @@ export default function Note(props: { TreeData: any[]; success: () => void }) {
     }
   };
 
+  // 修改留言
   const handleEdit = async () => {
     try {
       const res = await barrage.editMessage({
@@ -167,7 +168,7 @@ export default function Note(props: { TreeData: any[]; success: () => void }) {
 
             <div className={i.parent_id === 0 ? `ml-12` : ""}>
               {i.children.length !== 0 ? (
-                <Note TreeData={i.children} success={() => {}} />
+                <Note TreeData={i.children} success={success} />
               ) : null}
             </div>
           </div>

@@ -51,14 +51,17 @@ request.interceptors.request.use(
 request.interceptors.response.use(
   (response) => {
     const code = response.data.code;
-
+    // 跳转到登录页面
     if (code === 0) {
-      Notification({ type: "error", msg: response.data.msg, time: 2.5 });
       removeToken();
+      window.location.replace("/user");
     }
     // 放行
     if (code === 200) {
       return response.data;
+    }
+    if (code === 400) {
+      Notification({ type: "error", msg: response.data.msg, time: 2.5 });
     }
     // 2xx 范围内的状态码都会触发该函数。
     // 对响应数据做点什么
@@ -71,6 +74,7 @@ request.interceptors.response.use(
         data: { message },
       },
     } = error;
+    console.log(message);
 
     Notification({ type: "error", msg: message, time: 2.5 });
     return Promise.reject(error);

@@ -8,7 +8,7 @@ import Sider from "antd/es/layout/Sider";
 import * as article from "@/service/article";
 import { ResponseCode, getUserInfo } from "@/utils";
 
-export default () => {
+export default function PreviewNotes() {
   const url =
     "https://avatars.githubusercontent.com/u/119206123?s=400&u=c687a9a31da1b18e8b93313bca02766b9478bd50&v=4";
 
@@ -23,6 +23,10 @@ export default () => {
     create_at: "",
     author_name: "",
     viewers: "",
+    avatar: "",
+    username: "",
+    motto: "",
+    personal_articles_count: "",
   });
   const [content, setContent] = useState({
     article_content: "",
@@ -40,7 +44,12 @@ export default () => {
           create_at: res.data.create_at,
           author_name: res.data.author_name,
           viewers: res.data.viewers.toString(),
+          avatar: user.avatar,
+          username: user.username,
+          motto: user.motto,
+          personal_articles_count: user.personal_articles_count,
         });
+
         setContent({
           article_content: res.data.article_content,
           preview_theme: res.data.preview_theme,
@@ -58,6 +67,7 @@ export default () => {
   <div>${headerInfo.viewers}</div></div>\n\n`;
 
   useEffect(() => {
+    console.log(user, "---");
     void getArticle();
   }, []);
 
@@ -80,16 +90,20 @@ export default () => {
             <div className=" w-full m-[0_auto]  flex  items-center">
               <Avatar className="hover:animate-spin w-16 h-16" src={url} />
               <div className="text-xl w-[calc(100%-64px)] font-bold ml-4 text-center text-[var(--text-color)]">
-                <div className="text-3xl"> {user.username}</div>
-                <div className="text-sm mt-2 text-[teal]"> {user.motto}</div>
+                <div className="text-3xl mt-2 text-[var(--black)]">
+                  {headerInfo.username}
+                </div>
+                <div className="text-sm mt-2 text-[teal]">
+                  {headerInfo.motto}
+                </div>
               </div>
             </div>
 
-            <div className=" mt-4 text-[var(--text-color)] font-[var(--globalFont),serif] font-bold break-words">
+            <div className="mt-4 text-[var(--black)] font-[var(--globalFont),serif] font-bold break-words">
               <div className="flex justify-between items-center w-[80%] m-[0_auto] ">
                 <div className="flex justify-center flex-col items-center">
                   <div>文章</div>
-                  <div>{user.personal_articles_count}</div>
+                  <div>{headerInfo.personal_articles_count}</div>
                 </div>
                 <div className="flex justify-center flex-col items-center">
                   <div>分类</div>
@@ -112,4 +126,4 @@ export default () => {
       </Layout>
     </Layout>
   );
-};
+}
