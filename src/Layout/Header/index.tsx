@@ -1,4 +1,4 @@
-import Logo from "@/components/Logo";
+import Logo from "@/components/logo";
 import { Button, Menu, MenuProps, Space, notification } from "antd";
 import { Icon } from "@iconify/react";
 import { useEffect, useState, forwardRef } from "react";
