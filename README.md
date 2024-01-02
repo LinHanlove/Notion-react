@@ -8,7 +8,12 @@
 
 前端技术：React + Redux + Vite + tailWindCss + typeScript + antd
 
-后端技术：暂未写，后面打算用 php + thinkphp
+后端技术：tp8 + mysql 后面打算使用 java 重构
+
+## 项目地址
+
+[github](https://gitee.com/linhanlove/notions)
+[gitee](https://gitee.com/linhanlove/notions)
 
 ## 网站简介
 
@@ -18,7 +23,7 @@
 
 网站模块：
 
-- 博客系统：具有文章，留言，时间线，云音乐等功能。
+- 博客系统：具有文章，留言等功能。
 <!-- - 聊天室系统：具有朋友圈（时间线），好友，群等功能。 -->
 
 <!-- 本网站搭建于阿里云，采用前后端分离进行实现，两个前端项目通过 Nginx 代理。 -->
@@ -60,6 +65,14 @@ pnpm build
 一定要`Star`
 
 开源不易，欢迎赞助这个项目，让这个项目越来越好。
+
+## 🚀 特别提示 🚀
+
+1.想找一个类似掘金 app 端的设计原型图，如果有，私我
+
+2.本人微信：linhan_0119
+
+3.再次欢迎各位大佬斧正
 
 ## 欢迎关注作者 掘金
 
