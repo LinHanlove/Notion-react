@@ -18,12 +18,22 @@ export default function Home() {
         <div className="absolute z-[999] w-full">
           <TransitionUp>
             <HomeContainer />
+            <footer className="w-full h-[80px] bg-[--background] flex justify-center items-center text-center text-[--text-color] text-[12px]">
+              <div>
+                <p>© 2023 💙</p>
+                <p className="text-[10px]">
+                  Designed by 👨‍💻 <span className="text-[--green]">linhan</span>
+                  All Rights Reserved. Powered by 💻{" "}
+                  <span className="text-[--green]">
+                    TypeScript React Vite Tailwind ...
+                  </span>
+                </p>
+                <p className="text-[--green]">Enjoy it! Have Fun!</p>
+              </div>
+            </footer>
           </TransitionUp>
         </div>
       </div>
     </div>
   );
 }
-// {
-
-// }

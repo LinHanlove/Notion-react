@@ -5,7 +5,13 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { Icon } from "@iconify/react";
 import { useNavigate } from "react-router-dom";
 import * as article from "@/service/article";
-import { useEffect } from "react";
+import {
+  JSXElementConstructor,
+  ReactElement,
+  ReactNode,
+  ReactPortal,
+  useEffect,
+} from "react";
 import { ResponseCode, getUserInfo } from "@/utils";
 
 export default function Notebook() {
@@ -84,7 +90,57 @@ export default function Notebook() {
             <List
               itemLayout="vertical"
               dataSource={articleList}
-              renderItem={(item) => (
+              renderItem={(item: {
+                article_id: any;
+                article_cover: string | undefined;
+                avatar: any;
+                title:
+                  | string
+                  | number
+                  | boolean
+                  | ReactElement<any, string | JSXElementConstructor<any>>
+                  | Iterable<ReactNode>
+                  | ReactPortal
+                  | null
+                  | undefined;
+                article_summary:
+                  | string
+                  | number
+                  | boolean
+                  | ReactElement<any, string | JSXElementConstructor<any>>
+                  | Iterable<ReactNode>
+                  | ReactPortal
+                  | null
+                  | undefined;
+                viewers:
+                  | string
+                  | number
+                  | boolean
+                  | ReactElement<any, string | JSXElementConstructor<any>>
+                  | Iterable<ReactNode>
+                  | ReactPortal
+                  | null
+                  | undefined;
+                nickname:
+                  | string
+                  | number
+                  | boolean
+                  | ReactElement<any, string | JSXElementConstructor<any>>
+                  | Iterable<ReactNode>
+                  | ReactPortal
+                  | null
+                  | undefined;
+                like:
+                  | string
+                  | number
+                  | boolean
+                  | ReactElement<any, string | JSXElementConstructor<any>>
+                  | Iterable<ReactNode>
+                  | ReactPortal
+                  | null
+                  | undefined;
+                article_label: string[];
+              }) => (
                 <List.Item
                   onClick={() => {
                     navigate("/preview-notes", {
