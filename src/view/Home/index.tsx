@@ -20,7 +20,9 @@ export default function Home() {
             <HomeContainer />
             <footer className="w-full h-[80px] bg-[--background] flex justify-center items-center text-center text-[--text-color] text-[12px]">
               <div>
-                <p>© 2023 💙</p>
+                <a href="https://beian.miit.gov.cn/" target="_blank">
+                  © 2023 💙陇ICP备2024005796号
+                </a>
                 <p className="text-[10px]">
                   Designed by 👨‍💻 <span className="text-[--green]">linhan</span>
                   All Rights Reserved. Powered by 💻{" "}
