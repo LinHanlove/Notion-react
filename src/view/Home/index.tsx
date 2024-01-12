@@ -25,7 +25,7 @@ export default function Home() {
                 </a>
                 <p className="text-[10px]">
                   Designed by 👨‍💻 <span className="text-[--green]">linhan</span>
-                  All Rights Reserved. Powered by 💻{" "}
+                  All Rights Reserved. Powered by 💻
                   <span className="text-[--green]">
                     TypeScript React Vite Tailwind ...
                   </span>
