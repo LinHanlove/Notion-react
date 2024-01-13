@@ -76,6 +76,9 @@ export default function Layout() {
       <Header ref={headerDom} />
 
       <div className="w-full h-full ">
+        <Routes>
+          <Route path={"/"} element={<Navigate replace to="/home" />} />
+        </Routes>
         {/* 二级路由渲染出口 */}
         <Outlet />
       </div>

@@ -61,6 +61,7 @@ const Header = forwardRef((props: { children?: any }, ref: any) => {
   const [selectedKey, setSelectedKey] = useState("");
   useEffect(() => {
     setSelectedKey(location.pathname.split("/")[1]);
+    console.log(location.pathname);
   }, [location]);
 
   const LogOut = () => {

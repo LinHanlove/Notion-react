@@ -60,9 +60,7 @@ export const routes: _RouteObject[] = [
         path: "home",
         name: "首页",
         element: (
-          <Suspense
-            fallback={<div className="w-full h-full bg-[teal]">555</div>}
-          >
+          <Suspense fallback={<Loaders />}>
             <Home />
           </Suspense>
         ),

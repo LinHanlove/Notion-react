@@ -399,7 +399,10 @@ export default function HomeContainer() {
                           <div className="text-sm font-bold  mt-2 flex  items-center">
                             {item.article_label.map((label: string) => {
                               return (
-                                <div className="flex items-center  rounded-lg text-[var(--lightGreen)] border-dashed border  border-[var(--lightGray)] px-1">
+                                <div
+                                  className="flex items-center  rounded-lg text-[var(--lightGreen)] border-dashed border  border-[var(--lightGray)] px-1"
+                                  key={label}
+                                >
                                   <Icon
                                     icon="solar:bookmark-opened-outline"
                                     className="text-[orange] mr-[8px]"
