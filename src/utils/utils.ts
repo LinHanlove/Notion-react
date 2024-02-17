@@ -56,6 +56,7 @@ export const buildHeaders = () => {
     time: timeStamp,
   };
 };
+
 /**请求数据处理 */
 export const dateToString = (data?: any) => {
   if (!(data instanceof Object) || data instanceof FormData) {

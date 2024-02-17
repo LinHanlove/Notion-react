@@ -113,7 +113,6 @@ export default function HomeContainer() {
   const getRecommendResData = async () => {
     try {
       const res = await article.getRecommendArticleList({
-        search: optional(search),
         page: pageInfo.page,
         page_size: 2,
       });
@@ -363,7 +362,7 @@ export default function HomeContainer() {
                     >
                       <Card
                         key={item.article_id}
-                        className="h-[30vh] [&>.ant-card-body]:overflow-hidden  [&>.ant-card-body]:w-full [&>.ant-card-body]:flex [&>.ant-card-body]:h-full [&>.ant-card-body]:p-0  md:h-[24vh] md:w-[80%] w-[100%] m-[0_auto] flex  rounded-[12px] border-0 bg-[var(--background)]  shadow-box mt-8"
+                        className="min-h-[30vh] [&>.ant-card-body]:overflow-hidden  [&>.ant-card-body]:w-full [&>.ant-card-body]:flex [&>.ant-card-body]:h-full [&>.ant-card-body]:p-0  md:h-[24vh] md:w-[80%] w-[100%] m-[0_auto] flex  rounded-[12px] border-0 bg-[var(--background)]  shadow-box mt-8"
                       >
                         <div className="w-1/2 p-5">
                           <div className="text-sm font-bold text-[var(--text-color)] flex items-center">
@@ -381,7 +380,7 @@ export default function HomeContainer() {
                               />
                               <div>{item.viewers}</div>
                             </div>
-                            <div className="flex items-center mx-5">
+                            <div className="flex items-  mx-5">
                               <Icon icon="jam:write" className=" mr-1" />
                               <div>{item.author_name}</div>
                             </div>
@@ -436,7 +435,7 @@ export default function HomeContainer() {
                     >
                       <Card
                         key={item.article_id}
-                        className="h-[30vh] rounded-[12px] md:h-[24vh] md:w-[80%] [&>.ant-card-body]:overflow-hidden  [&>.ant-card-body]:w-full [&>.ant-card-body]:flex [&>.ant-card-body]:h-full [&>.ant-card-body]:p-0 w-[100%] m-[0_auto] flex  border-0 bg-[var(--background)]  shadow-box mt-8"
+                        className="min-h-[30vh] rounded-[12px] md:h-[24vh] md:w-[80%] [&>.ant-card-body]:overflow-hidden  [&>.ant-card-body]:w-full [&>.ant-card-body]:flex [&>.ant-card-body]:h-full [&>.ant-card-body]:p-0 w-[100%] m-[0_auto] flex  border-0 bg-[var(--background)]  shadow-box mt-8"
                       >
                         <div className="w-1/2 h-full overflow-hidden rounded-[12px_0_0_12px]">
                           <img
